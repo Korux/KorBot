@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 const allRoles = ["Admin","RoleOne","RoleTwo","RoleThree"];
 
-bot.login('NDA2NzAxMDI1NDEyNzc1OTM4.DU3C9g.nWf_r0cc3b8aDM81dc6_a0Ul1vU');
+bot.login('NDA2NzU4OTQ5MTc0NTA5NTc4.DU3nYw.JuyMFH9XdlTdXYFFstxYKP9epNg');
 
 bot.on('ready',(ready) => {
     console.log("bot online");
