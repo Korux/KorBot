@@ -18,7 +18,7 @@ bot.on('message',(message) => {
 
     if(message.content.substr(0,5) == "!emo "){
         var emoteStr = message.content.substr(5);
-        emoteStr = "https://risend.github.io/vampy/images/" + emoteStr + ".png";
+        emoteStr = "https://github.com/Korux/leepBot/blob/master/images/" + emoteStr + ".png";
         message.channel.send({file:emoteStr});
     }
 });
