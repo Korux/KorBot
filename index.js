@@ -18,7 +18,8 @@ bot.on('message',(message) => {
 
     if(message.content.substr(0,5) == "!emo "){
         var emoteStr = message.content.substr(5);
-        emoteStr = "https://github.com/Korux/leepBot/blob/master/images/" + emoteStr + ".png";
+        //emoteStr = "https://Korux.github.io/leepBot/images/" + emoteStr + ".png";
+        emoteStr = "https://raw.githubusercontent.com/Korux/leepBot/master/images/" + emoteStr + ".png";
         message.channel.send({file:emoteStr});
     }
 });
