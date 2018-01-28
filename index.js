@@ -1,3 +1,4 @@
+const jimp = require('jimp');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const botInfo = require('./json/package.json');
@@ -48,7 +49,11 @@ bot.on('message',(message) => {
 
     if(message.content.substr(0,5) == "!emo "){
         var emoteStr = message.content.substr(5);
-        emoteStr = "https://raw.githubusercontent.com/Korux/leepBot/master/images/" + emoteStr + ".png";
+        emoteStr = "https://raw.githubusercontent.com/Korux/poi_bot/master/images/" + emoteStr + ".png";
         message.channel.send({file:emoteStr}).catch(console.error);
+    }
+    
+    if(message.content == "!imgtest"){
+        message.channel.send({file:"https://raw.githubusercontent.com/Korux/poi_bot/master/images/slap_out.png"}).catch(console.error);
     }
 });
