@@ -11,7 +11,10 @@
         {"name" : "!slap"},
         {"name" : "!choose"},
         {"name" : "!roll10"},
-        {"name" : "!spark"}
+        {"name" : "!roll10 legfes"},
+        {"name" : "!spark"},
+        {"name" : "!triggers"},
+        {"name" : "!listtriggers"}
     ],
     "SSRSummons":[
         {"name" : "Adramelech"},
@@ -195,6 +198,14 @@
             {"trigger" : "**75% Trigger** \n Fills all charge diamonds\n \n"},
             {"trigger" : "**50% Trigger** \n Casts And The World Stood Still - Gains <ATK Up>, Inflicts <Sleep>, <Skill Sealed>, <C.A. Sealed> and <Glacial Seal> on all allies \n\n"},
             {"trigger" : "**25% Trigger** \n Fills all charge diamonds \n\n"}
+        ]},
+        {"anubishl" : [
+            {"trigger" : "**80% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Dispel all allies \n\n"},
+            {"trigger" : "**60% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Dispel all allies\n \n"},
+            {"trigger" : "**40% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Dispel all allies \n\n"},
+            {"trigger" : "**20% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Dispel all allies \n\n"},
+            {"trigger" : "**10% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Dispel all allies \n\n"},
+            {"trigger" : "**Note** \n Ophios damage starts at ~7,000, ramping up to ~20,000 towards the end of the raid"}
         ]}
     ]
 }

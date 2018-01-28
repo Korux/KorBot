@@ -9,7 +9,7 @@ const botInfo = JSON.parse(rawData);
 bot.login('NDA2NzU4OTQ5MTc0NTA5NTc4.DU3nYw.JuyMFH9XdlTdXYFFstxYKP9epNg');
 
 bot.on('ready',(ready) => {
-    bot.user.setActivity('Azur Lane');
+    bot.user.setActivity("in Korux's Basement");
     console.log(botDetails.name + " is online");
 });
 
@@ -76,8 +76,19 @@ bot.on('message',(message) => {
         
     }
 
+    if(message.content == "!listtriggers"){
+        var currTriggers = 'The Current Bosses in my Database are: \n ```';
+        currTriggers = currTriggers + Object.keys(botInfo.BossTriggerInfo[0])[0]+'\n';
+        for(var i = 0; i < botInfo.BossTriggerInfo.length; i++){
+            currTriggers = currTriggers + Object.keys(botInfo.BossTriggerInfo[i])[0]+'\n';
+        }
+        currTriggers += '```';
+        message.channel.send(currTriggers);
+    }
+
     if(message.content == "!listroles"){
         var currRoles ='The Current Roles Are: \n ```';
+        currRoles = currRoles + botInfo.allRoles[0].name + '\n';
         botInfo.allRoles.forEach(function(currRole){
             currRoles = currRoles + currRole.name + '\n';
         });
