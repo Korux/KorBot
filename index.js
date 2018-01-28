@@ -54,11 +54,11 @@ bot.on('message',(message) => {
     }
 
     if(message.content.substr(0,8) == "!choose "){
-        var concated = message.content.substr(8).replace(/\s/g,'');
+        var concated = message.content.substr(8);
         var options = concated.split(",");
-        options = options.filter(Boolean);
+        options = options.filter(word => word.trim() != '');
         var pick = Math.floor(Math.random() * options.length);
-        message.reply("I choose " + options[pick]);
+        message.reply("I choose " + "**" + options[pick].trim() + "**");
     }
 
     if(message.content.substr(0,5) == "!slap"){
