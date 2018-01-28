@@ -1,29 +1,25 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-var allRoles;
+const botInfo = require('./package.json');
+const roles = require('./roles.json');
 
 bot.login('NDA2NzU4OTQ5MTc0NTA5NTc4.DU3nYw.JuyMFH9XdlTdXYFFstxYKP9epNg');
 
 bot.on('ready',(ready) => {
-    console.log("bot online");
+    console.log(botInfo.name + " is online");
 });
 
 bot.on('message',(message) => {
-
-    if(message.content == "!getroles"){
-        allRoles = message.guild.roles;
-        
-    }
 
     if(message.content.substr(0,9) == "!addrole " || message.content.substr(0,12) == "!removerole "){ 
         var commandType = message.content.split(" ")[0]; 
         var roleStr = message.content.split(" ")[1];  
         var role = "";
-        allRoles.forEach(function (value, key, mapObj) {  
-            if(roleStr.toLowerCase() == value.name.toLowerCase()){
-                role = value;
+        roles.allRoles.forEach(function(currRole){
+            if(roleStr.toLowerCase() == currRole.name.toLowerCase()){
+                role = message.guild.roles.find("name", currRole.name);
             }
-        }); 
+        });
 
         if(role == ""){
             message.reply("No such role exists");

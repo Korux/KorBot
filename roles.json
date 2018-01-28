@@ -1,0 +1,7 @@
+{
+    "allRoles":[
+        {"name" : "RoleOne"},
+        {"name" : "RoleTwo"},
+        {"name" : "RoleThree"}
+    ]
+}
