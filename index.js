@@ -1,5 +1,4 @@
 const jimp = require('jimp');
-//const Fabric = require('fabric');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const botInfo = require('./json/package.json');
@@ -55,8 +54,8 @@ bot.on('message',(message) => {
     }
 
     if(message.content.substr(0,5) == "!slap"){
-        var fileName = "test2.png";
-        var originalFile = "slap_out.png";
+        var fileName = "slap_name.png";
+        var originalFile = "./images/slap_out.png";
         var imageCaption;
         if(message.mentions.users.array().length == 0){
             imageCaption = message.content.substr(6);
@@ -78,7 +77,7 @@ bot.on('message',(message) => {
             })
             .then(function(){
                 setTimeout(function(){
-                    message.channel.send({file:"./test2.png"});
+                    message.channel.send({file:"./slap_name.png"});
                 },1000);
                 
             })
