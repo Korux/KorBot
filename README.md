@@ -1,2 +1,2 @@
 # poi bot
-Discord Bot. Hi leep
+Discord Bot.
