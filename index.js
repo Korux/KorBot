@@ -53,6 +53,14 @@ bot.on('message',(message) => {
         message.channel.send({file:emoteStr}).catch(console.error);
     }
 
+    if(message.content.substr(0,8) == "!choose "){
+        var concated = message.content.substr(8).replace(/\s/g,'');
+        var options = concated.split(",");
+        options = options.filter(Boolean);
+        var pick = Math.floor(Math.random() * options.length);
+        message.reply("I choose " + options[pick]);
+    }
+
     if(message.content.substr(0,5) == "!slap"){
         var fileName = "slap_name.png";
         var originalFile = "./images/slap_out.png";
