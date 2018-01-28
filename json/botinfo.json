@@ -1,13 +1,13 @@
 {
     "allRoles":[
         {"name" : "6manHL"},
-        {"name" : "RoleTwo"},
-        {"name" : "RoleThree"}
+        {"name" : "Slime"}
     ],
     "allCommands":[
         {"name" : "!emo"},
         {"name" : "!addrole"},
         {"name" : "!removerole"},
+        {"name" : "!listroles"},
         {"name" : "!slap"},
         {"name" : "!choose"},
         {"name" : "!roll10"},

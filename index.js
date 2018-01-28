@@ -50,6 +50,15 @@ bot.on('message',(message) => {
         
     } 
 
+    if(message.content == "!listroles"){
+        var currRoles ='The Current Roles Are: \n ```';
+        botInfo.allRoles.forEach(function(currRole){
+            currRoles = currRoles + currRole.name + '\n';
+        });
+        currRoles += '```';
+        message.channel.send(currRoles);
+    }
+
     if(message.content.substr(0,5) == "!emo "){
         var emoteStr = message.content.substr(5);
         emoteStr = "https://raw.githubusercontent.com/Korux/poi_bot/master/images/" + emoteStr + ".png";
@@ -206,6 +215,8 @@ bot.on('message',(message) => {
         result = result.substr(0,result.length - 2);
         message.channel.send('```xml\n' + result + '```');
     }
+
+
     if(message.content.substr(0,8) == "!choose "){
         var concated = message.content.substr(8);
         var options = concated.split(",");
@@ -213,6 +224,7 @@ bot.on('message',(message) => {
         var pick = Math.floor(Math.random() * options.length);
         message.reply("I choose " + "**" + options[pick].trim() + "**");
     }
+
 
     if(message.content.substr(0,5) == "!slap"){
         var fileName = "slap_name.png";
