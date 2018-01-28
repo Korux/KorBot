@@ -50,6 +50,32 @@ bot.on('message',(message) => {
         
     } 
 
+    if(message.content.substr(0,10) == "!triggers "){
+        var boss = message.content.substr(10);
+        var bossIndex = 0;
+        var result = '**' + boss.toUpperCase() + ' TRIGGER INFO** \n```xml\n';
+        var isBoss = false;
+        for(var i = 0; i < botInfo.BossTriggerInfo.length; i++){
+            if(boss.toLowerCase() == Object.keys(botInfo.BossTriggerInfo[i])[0]){
+                isBoss = true;
+                break;
+            }
+            bossIndex++;
+        }
+
+        if(isBoss){
+            var bossTriggers = botInfo.BossTriggerInfo[bossIndex][boss.toLowerCase()];
+            bossTriggers.forEach(function(thisTrigger){
+                result += thisTrigger.trigger;
+            });
+            result += '```';
+            message.channel.send(result);
+        } else {
+            message.channel.send("That Boss is not in my database! ");
+        }
+        
+    }
+
     if(message.content == "!listroles"){
         var currRoles ='The Current Roles Are: \n ```';
         botInfo.allRoles.forEach(function(currRole){

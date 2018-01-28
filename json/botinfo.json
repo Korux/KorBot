@@ -160,19 +160,41 @@
         {"name" : "Zeta"},
         {"name" : "Zeta (Dark"}
         ],
-        "SSRCharasLimited":[
-            {"name" : "Katalina"},
-            {"name" : "Rackam"},
-            {"name" : "Io"},
-            {"name" : "Eugen"},
-            {"name" : "Rosetta"},
-            {"name" : "Lecia"},
-            {"name" : "Black Night"},
-            {"name" : "Orchid"},
-            {"name" : "Sturm"},
-            {"name" : "Drang"},
-            {"name" : "Chevira"},
-            {"name" : "Lucio"},
-            {"name" : "Olivia"}
-        ]
+    "SSRCharasLimited":[
+        {"name" : "Katalina"},
+        {"name" : "Rackam"},
+        {"name" : "Io"},
+        {"name" : "Eugen"},
+        {"name" : "Rosetta"},
+        {"name" : "Lecia"},
+        {"name" : "Black Night"},
+        {"name" : "Orchid"},
+        {"name" : "Sturm"},
+        {"name" : "Drang"},
+        {"name" : "Chevira"},
+        {"name" : "Lucio"},
+        {"name" : "Olivia"}
+    ],
+    "BossTriggerInfo":[
+        {"jkhl" : [
+            {"trigger" : "**60% Trigger** \n Move To Rose Phase\n\n"},
+            {"trigger" : "**40% Trigger** \n Move To Bloom Phase \n\n"},
+            {"trigger" : "**25% Trigger** \n Casts Spiral Rose - Wind dmg to one ally and inflict <Spiral Rose>\n \n"},
+            {"trigger" : "**10% Trigger** \n Casts Domination Field - Wind dmg to all allies and inflict <Obedience> \n\n"},
+            {"trigger" : "**3% Trigger** \n Casts Domination Field - Wind dmg to all allies and inflict <Obedience> \n\n"}
+        ]},
+        {"tehl" : [
+            {"trigger" : "**50% Trigger** \n Move To Water Phase\n\n"},
+            {"trigger" : "**45% Trigger** \n Casts Absolute Zero - Remove all debuffs on self. Gains <Refresh> and <Sacrificed> \n\n"},
+            {"trigger" : "**25% Trigger** \n Move To Final Phase\n Casts Violent Flame - Big dmg to all allies and inflict <Fire Def Down>, <Water Def Down>. Remove all debuffs on self, removes <Sacrificed>\n \n"},
+            {"trigger" : "**10% Trigger** \n Unleashes True Power\n Casts Frigid Blaze - Multi-hit fire and water dmg to random allies, inflict <Burned> and <Paralysis> on one ally \n\n"}
+        ]},
+        {"maculahl" : [
+            {"trigger" : "**If Any Party Member Has Glacial Seal** \n Casts Froststar Staff - About 40k dmg to all allies and inflict <Freeze>  \n\n"},
+            {"trigger" : "**100% Trigger** \n Casts Sub Zero - Inflicts <Skill Sealed>, <C.A. Sealed> for 5 turns \n\n"},
+            {"trigger" : "**75% Trigger** \n Fills all charge diamonds\n \n"},
+            {"trigger" : "**50% Trigger** \n Casts And The World Stood Still - Gains <ATK Up>, Inflicts <Sleep>, <Skill Sealed>, <C.A. Sealed> and <Glacial Seal> on all allies \n\n"},
+            {"trigger" : "**25% Trigger** \n Fills all charge diamonds \n\n"}
+        ]}
+    ]
 }
