@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const botInfo = require('./package.json');
-const roles = require('./roles.json');
+const botInfo = require('./json/package.json');
+const roles = require('./json/roles.json');
 
 bot.login('NDA2NzU4OTQ5MTc0NTA5NTc4.DU3nYw.JuyMFH9XdlTdXYFFstxYKP9epNg');
 
