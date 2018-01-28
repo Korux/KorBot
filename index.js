@@ -1,14 +1,16 @@
 const jimp = require('jimp');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const botInfo = require('./json/package.json');
-const roles = require('./json/roles.json');
-const commands = require('./json/commands.json');
+const botDetails = require('./json/package.json');
+const fs = require('fs');
+let rawData = fs.readFileSync('./json/botinfo.json');
+const botInfo = JSON.parse(rawData);
 
 bot.login('NDA2NzU4OTQ5MTc0NTA5NTc4.DU3nYw.JuyMFH9XdlTdXYFFstxYKP9epNg');
 
 bot.on('ready',(ready) => {
-    console.log(botInfo.name + " is online");
+    bot.user.setActivity('Azur Lane');
+    console.log(botDetails.name + " is online");
 });
 
 bot.on('message',(message) => {
@@ -17,7 +19,7 @@ bot.on('message',(message) => {
         var commandType = message.content.split(" ")[0]; 
         var roleStr = message.content.split(" ")[1];  
         var role = "";
-        roles.allRoles.forEach(function(currRole){
+        botInfo.allRoles.forEach(function(currRole){
             if(roleStr.toLowerCase() == currRole.name.toLowerCase()){
                 role = message.guild.roles.find("name", currRole.name);
             }
@@ -55,14 +57,17 @@ bot.on('message',(message) => {
     }
 
     if(message.content == "!commands"){
-        message.channel.send("The Current Commands Are: ");
-        commands.allCommands.forEach(function(command){
-            message.channel.send( '`' + command.name + '`' + '\n');
+        var currCommands ='The Current Commands Are: \n ```';
+        botInfo.allCommands.forEach(function(command){
+            currCommands = currCommands + command.name + '\n';
         });
+        currCommands += '```';
+        message.channel.send(currCommands);
     }
 
     if(message.content == "!spark"){
         var randNum;
+        var drawnCharas = [];
         var possibleSSRS = ["Summon","Gold Moon","Character"];
         var result = "You Got: \n";
         var ssrCount = 0;
@@ -75,9 +80,38 @@ bot.on('message',(message) => {
                 if(SSR == "Gold Moon"){
                     result = result + "<Gold Moon> \n";
                 } else if (SSR == "Summon") { 
-                    result = result + "<SSR Summon placeholder_summon_name> \n"; 
+                    result = result + "<SSR Summon " + botInfo.SSRSummons[Math.floor(Math.random() * botInfo.SSRSummons.length)].name + "> \n"; 
                 } else{
-                    result = result + "<SSR Character placeholder_char_name> \n";
+                    var rollResult = Math.floor(Math.random() * (botInfo.SSRCharasNonLimited.length + botInfo.SSRCharasLimited.length));
+                        if(rollResult < botInfo.SSRCharasNonLimited.length){
+                            var alreadyDrawn = drawnCharas.forEach(function(drawn){
+                                if(drawn == botInfo.SSRCharasNonLimited[rollResult].name){
+                                    return true;
+                                }
+                                return false;
+                            });
+                            if(alreadyDrawn){
+                                result = result + "<Gold Moon> \n"
+                            } else {
+                                result = result + "<SSR Character " + botInfo.SSRCharasNonLimited[rollResult].name + "> \n";
+                                drawnCharas.push(botInfo.SSRCharasNonLimited[rollResult].name);
+                            }
+                            
+                        } else {
+                            var alreadyDrawn = drawnCharas.forEach(function(drawn){
+                                if(drawn == botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name){
+                                    return true;
+                                }
+                                return false;
+                            });
+                            if(alreadyDrawn){
+                                result = result + "<Gold Moon> \n"
+                            } else {
+                                result = result + "<SSR Character " +  botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name + "> \n";
+                                drawnCharas.push(botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name);
+                            }
+                            
+                        }
                 }
                 
             }
@@ -93,23 +127,48 @@ bot.on('message',(message) => {
         message.channel.send("```xml\n" + result + '```');
     }
 
-    if(message.content == "!roll10"){
+    if(message.content == "!roll10" || message.content == "!roll10 legfes"){
+        var SSRThreshhold;
+        var SRThreshhold;
+        if(message.content == "!roll10"){
+            SSRThreshhold = 3;
+            SRThreshhold = 18;
+        } else {
+            SSRThreshhold = 6;
+            SRThreshhold = 18;
+        }
         var possibleRolls = ["Dupe","Summon","Character","Weapon"];
         var result = "You got ";
         var rarity;
         var randNum;
         for (var i = 0; i < 9; i++){
             randNum = Math.floor(Math.random()*100);
-            if(randNum < 3){
+            if(randNum < SSRThreshhold){
                 rarity = "SSR";
-            } else if (randNum < 15){
+            } else if (randNum < SRThreshhold){
                 rarity = "SR";
             } else {
                 rarity = "R";
             }
             if(rarity == "SSR"){
                 var roll = possibleRolls[Math.floor(Math.random()*3)];
-                result = result + '<' + rarity + ' ' + roll + '>' + ', ';
+                if(roll == "Summon"){
+                    result = result + '<' + rarity + ' ' + botInfo.SSRSummons[Math.floor(Math.random() * botInfo.SSRSummons.length)].name + '>' + ', ';
+                } else if (roll == "Character"){
+                    if(SSRThreshhold == 3){
+                        result = result + '<' + rarity + ' ' + botInfo.SSRCharasNonLimited[Math.floor(Math.random() * botInfo.SSRCharasNonLimited.length)].name + '>' + ', ';
+                    } else {
+                        var rollResult = Math.floor(Math.random() * (botInfo.SSRCharasNonLimited.length + botInfo.SSRCharasLimited.length));
+                        if(rollResult < botInfo.SSRCharasNonLimited.length){
+                            result = result + '<' + rarity + ' ' + botInfo.SSRCharasNonLimited[rollResult].name + '>' + ', ';
+                        } else {
+                            result = result + '<' + rarity + ' ' + botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name + '>' + ', ';
+                        }
+                    }
+                } else {
+                    result = result + '<' + rarity + ' ' + roll + '>' + ', ';
+                }
+                
             } else {
                 var roll = possibleRolls[Math.floor(Math.random() * 4)];
                 result = result + rarity + ' ' + roll + ', ';
@@ -117,14 +176,29 @@ bot.on('message',(message) => {
            
         }
         randNum = Math.floor(Math.random()*100);
-        if(randNum < 3){
+        if(randNum < SSRThreshhold){
             rarity = "SSR";
         } else {
             rarity = "SR";
         }
         if(rarity == "SSR"){
             var roll = possibleRolls[Math.floor(Math.random()*3)];
-            result = result + '<' + rarity + ' ' + roll + '>' + ', ';
+                if(roll == "Summon"){
+                    result = result + '<' + rarity + ' ' + botInfo.SSRSummons[Math.floor(Math.random() * botInfo.SSRSummons.length)].name + '>' + ', ';
+                } else if (roll == "Character"){
+                    if(SSRThreshhold == 3){
+                        result = result + '<' + rarity + ' ' + botInfo.SSRCharasNonLimited[Math.floor(Math.random() * botInfo.SSRCharasNonLimited.length)].name + '>' + ', ';
+                    } else {
+                        var rollResult = Math.floor(Math.random() * (botInfo.SSRCharasNonLimited.length + botInfo.SSRCharasLimited.length));
+                        if(rollResult < botInfo.SSRCharasNonLimited.length){
+                            result = result + '<' + rarity + ' ' + botInfo.SSRCharasNonLimited[rollResult].name + '>' + ', ';
+                        } else {
+                            result = result + '<' + rarity + ' ' + botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name + '>' + ', ';
+                        }
+                    }
+                } else {
+                    result = result + '<' + rarity + ' ' + roll + '>' + ', ';
+                }
         } else {
             var roll = possibleRolls[Math.floor(Math.random() * 4)];
             result = result + rarity + ' ' + roll + ', ';
