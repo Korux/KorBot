@@ -61,6 +61,38 @@ bot.on('message',(message) => {
         });
     }
 
+    if(message.content == "!spark"){
+        var randNum;
+        var possibleSSRS = ["Summon","Gold Moon","Character"];
+        var result = "You Got: \n";
+        var ssrCount = 0;
+        var ssrPercent = 0.0;
+        for(var i = 0; i < 300;i++){
+            randNum = Math.floor(Math.random()*100);
+            if(randNum < 6){
+                ssrCount ++;
+                var SSR = possibleSSRS[Math.floor(Math.random()*3)];
+                if(SSR == "Gold Moon"){
+                    result = result + "<Gold Moon> \n";
+                } else if (SSR == "Summon") { 
+                    result = result + "<SSR Summon placeholder_summon_name> \n"; 
+                } else{
+                    result = result + "<SSR Character placeholder_char_name> \n";
+                }
+                
+            }
+        }
+        var sparkOptions = ["You Sparked Your Dick Pick",
+        "You sparked the E-sport pick",
+        "You sparked the OP Grand Series weapon, fuck your Dama Bar stash",
+        "You said 'fuck it' and sparked the meme pick"
+        ]
+        ssrPercent = ssrCount*100 / 300;
+        result = result + "<" + ssrCount + " SSRs" + ">, " + ssrPercent + '% \n';
+        result = result + sparkOptions[Math.floor(Math.random()*sparkOptions.length)];
+        message.channel.send("```xml\n" + result + '```');
+    }
+
     if(message.content == "!roll10"){
         var possibleRolls = ["Dupe","Summon","Character","Weapon"];
         var result = "You got ";
