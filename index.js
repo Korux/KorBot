@@ -61,6 +61,45 @@ bot.on('message',(message) => {
         });
     }
 
+    if(message.content == "!roll10"){
+        var possibleRolls = ["Dupe","Summon","Character","Weapon"];
+        var result = "You got ";
+        var rarity;
+        var randNum;
+        for (var i = 0; i < 9; i++){
+            randNum = Math.floor(Math.random()*100);
+            if(randNum < 3){
+                rarity = "SSR";
+            } else if (randNum < 15){
+                rarity = "SR";
+            } else {
+                rarity = "R";
+            }
+            if(rarity == "SSR"){
+                var roll = possibleRolls[Math.floor(Math.random()*3)];
+                result = result + '<' + rarity + ' ' + roll + '>' + ', ';
+            } else {
+                var roll = possibleRolls[Math.floor(Math.random() * 4)];
+                result = result + rarity + ' ' + roll + ', ';
+            }
+           
+        }
+        randNum = Math.floor(Math.random()*100);
+        if(randNum < 3){
+            rarity = "SSR";
+        } else {
+            rarity = "SR";
+        }
+        if(rarity == "SSR"){
+            var roll = possibleRolls[Math.floor(Math.random()*3)];
+            result = result + '<' + rarity + ' ' + roll + '>' + ', ';
+        } else {
+            var roll = possibleRolls[Math.floor(Math.random() * 4)];
+            result = result + rarity + ' ' + roll + ', ';
+        }
+        result = result.substr(0,result.length - 2);
+        message.channel.send('```xml\n' + result + '```');
+    }
     if(message.content.substr(0,8) == "!choose "){
         var concated = message.content.substr(8);
         var options = concated.split(",");
