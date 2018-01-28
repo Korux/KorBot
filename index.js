@@ -1,4 +1,5 @@
 const jimp = require('jimp');
+//const Fabric = require('fabric');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const botInfo = require('./json/package.json');
@@ -52,8 +53,37 @@ bot.on('message',(message) => {
         emoteStr = "https://raw.githubusercontent.com/Korux/poi_bot/master/images/" + emoteStr + ".png";
         message.channel.send({file:emoteStr}).catch(console.error);
     }
-    
-    if(message.content == "!imgtest"){
-        message.channel.send({file:"https://raw.githubusercontent.com/Korux/poi_bot/master/images/slap_out.png"}).catch(console.error);
-    }
+
+    if(message.content.substr(0,5) == "!slap"){
+        var fileName = "test2.png";
+        var originalFile = "slap_out.png";
+        var imageCaption;
+        if(message.mentions.users.array().length == 0){
+            imageCaption = message.content.substr(6);
+        } else {
+            imageCaption = message.mentions.users.first().username;
+        }
+       
+        var xVal = 45 - (imageCaption.length*5);
+        var loadedImage;
+        
+        jimp.read(originalFile)
+            .then(function (image) {
+                loadedImage = image;
+                return jimp.loadFont(jimp.FONT_SANS_16_BLACK);
+            })
+            .then(function (font) {
+                loadedImage.print(font, 130+xVal, 230, imageCaption)
+                            .write(fileName);
+            })
+            .then(function(){
+                setTimeout(function(){
+                    message.channel.send({file:"./test2.png"});
+                },1000);
+                
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+        }
 });
