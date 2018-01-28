@@ -227,8 +227,8 @@ bot.on('message',(message) => {
 
 
     if(message.content.substr(0,5) == "!slap"){
-        var fileName = "slap_name.png";
-        var originalFile = "./images/slap_out.png";
+        var fileName = "./action_images/slap_name.png";
+        var originalFile = "./action_images/slap_out.png";
         var imageCaption;
         if(message.mentions.users.array().length == 0){
             imageCaption = message.content.substr(6);
@@ -250,8 +250,8 @@ bot.on('message',(message) => {
             })
             .then(function(){
                 setTimeout(function(){
-                    message.channel.send({file:"./slap_name.png"});
-                },1000);
+                    message.channel.send({file:"./action_images/slap_name.png"});
+                },200);
                 
             })
             .catch(function (err) {
