@@ -1,0 +1,9 @@
+{
+    "allCommands":[
+        {"name" : "!emo"},
+        {"name" : "!addrole"},
+        {"name" : "!removerole"},
+        {"name" : "!slap"},
+        {"name" : "!choose"}
+    ]
+}
