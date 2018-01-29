@@ -1,11 +1,12 @@
 const jimp = require('jimp');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const botDetails = require('./json/package.json');
 const fs = require('fs');
-let rawData = fs.readFileSync('./json/botinfo.json');
+const botDetails = require('./json/package.json');
+const rawData = fs.readFileSync('./json/botinfo.json');
+var rawDataRoles = fs.readFileSync('./json/roles.json');
 const botInfo = JSON.parse(rawData);
-var roles;
+var rolesInfo = JSON.parse(rawDataRoles);
 
 bot.login('NDA2NzU4OTQ5MTc0NTA5NTc4.DU3nYw.JuyMFH9XdlTdXYFFstxYKP9epNg');
 
@@ -17,22 +18,46 @@ bot.on('ready',(ready) => {
 bot.on('message',(message) => {
 
     if(message.content == "!updateroles"){
-        roles = message.guild.roles;
+        var newRoles = {allRoles : []};
+        var roles = message.guild.roles;
         message.channel.send("Roles Updated! the roles Are:\n");
         var output = '```\n';
         roles.forEach(function(role){
             output = output + role.name + '\n';
+            newRoles.allRoles.push({name : role.name});
+        });
+        json = JSON.stringify(newRoles);
+        fs.writeFileSync('./json/roles.json', json, 'utf8');
+        output += '```';
+        message.channel.send(output);
+        message.channel.send("data written to: roles.json");
+        rawDataRoles = fs.readFileSync("./json/roles.json");
+        rolesInfo = JSON.parse(rawDataRoles);
+    }
+
+    if(message.content == "!readjsonroles"){
+        var output = '```\n';
+        rolesInfo.allRoles.forEach(function(role){
+            output = output + role.name + '\n';
         });
         output += '```';
         message.channel.send(output);
+    }
 
+    if(message.content == '!dptest'){
+        var url = message.author.avatarURL;
+        var obj = url.indexOf('.png');
+        var trueURL = url.substr(0,obj+4);
+        console.log(obj);
+        console.log(trueURL);
+        message.channel.send({file:trueURL}).catch(console.error);
     }
 
     if(message.content.substr(0,9) == "!addrole " || message.content.substr(0,12) == "!removerole "){ 
         var commandType = message.content.split(" ")[0]; 
         var roleStr = message.content.split(" ")[1];  
         var role = "";
-        roles.forEach(function(currRole){
+        rolesInfo.allRoles.forEach(function(currRole){
             if(roleStr.toLowerCase() == currRole.name.toLowerCase()){
                 role = message.guild.roles.find("name", currRole.name);
             }
