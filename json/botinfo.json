@@ -180,19 +180,23 @@
     ],
     "BossTriggerInfo":[
         {"jkhl" : [
+            {"name" : "JkHL"},
             {"trigger" : "**60% Trigger** \n Move To Rose Phase\n\n"},
             {"trigger" : "**40% Trigger** \n Move To Bloom Phase \n\n"},
             {"trigger" : "**25% Trigger** \n Casts Spiral Rose - Wind dmg to one ally and inflict <Spiral Rose>\n \n"},
             {"trigger" : "**10% Trigger** \n Casts Domination Field - Wind dmg to all allies and inflict <Obedience> \n\n"},
-            {"trigger" : "**3% Trigger** \n Casts Domination Field - Wind dmg to all allies and inflict <Obedience> \n\n"}
+            {"trigger" : "**3% Trigger** \n Casts Domination Field - Wind dmg to all allies and inflict <Obedience> \n\n"},
+            {"trigger" : "**Notes** \n <Spiral Rose> - Inflicts <DEF Down> on the affected ally. Can be spread through the use of skills \n\n <Obedience> - All of your attacks become wind, and the boss absorbs and heals on wind attacks"}
         ]},
         {"tehl" : [
+            {"name" : "TeHL"},
             {"trigger" : "**50% Trigger** \n Move To Water Phase\n\n"},
             {"trigger" : "**45% Trigger** \n Casts Absolute Zero - Remove all debuffs on self. Gains <Refresh> and <Sacrificed> \n\n"},
             {"trigger" : "**25% Trigger** \n Move To Final Phase\n Casts Violent Flame - Big dmg to all allies and inflict <Fire Def Down>, <Water Def Down>. Remove all debuffs on self, removes <Sacrificed>\n \n"},
             {"trigger" : "**10% Trigger** \n Unleashes True Power\n Casts Frigid Blaze - Multi-hit fire and water dmg to random allies, inflict <Burned> and <Paralysis> on one ally \n\n"}
         ]},
         {"maculahl" : [
+            {"name" : "MaculaHL"},
             {"trigger" : "**If Any Party Member Has Glacial Seal** \n Casts Froststar Staff - About 40k dmg to all allies and inflict <Freeze>  \n\n"},
             {"trigger" : "**100% Trigger** \n Casts Sub Zero - Inflicts <Skill Sealed>, <C.A. Sealed> for 5 turns \n\n"},
             {"trigger" : "**75% Trigger** \n Fills all charge diamonds\n \n"},
@@ -200,6 +204,7 @@
             {"trigger" : "**25% Trigger** \n Fills all charge diamonds \n\n"}
         ]},
         {"medusahl" : [
+            {"name" : "MedusaHL"},
             {"trigger" : "--Snek-- \n\n**50% Trigger**\n Casts Lethal Gaze - Single hit earth dmg, inflicts <50% charge cut>\n\n"},
             {"trigger" : "--Ass-- \n\n**100% Trigger** \n Casts Petrifying Stare - Multi-hit earth dmg to random allies, inflicts <Stone> for 2 turns \n\n"},
             {"trigger" : "**75% Trigger** \n Fills all charge diamonds\n \n"},
@@ -208,12 +213,14 @@
             {"trigger" : "**10% Trigger** \n Casts Medusiana - Big earth dmg to all allies, inflict <Skill Sealed> for 2 turns \n\n"}
         ]},
         {"nezhahl" : [
+            {"name" : "NezhaHL"},
             {"trigger" : "**75% Trigger** \n Fills all charge diamonds \n\n"},
             {"trigger" : "**50% Trigger** \n Casts Flamelance: Accendo - 10 hits of wind and fire dmg to random allies, totaling ~15,000 - 20,000\n\n"},
             {"trigger" : "**25% Trigger** \n Fills all charge diamonds\n \n"},
             {"trigger" : "**10% Trigger** \n Casts Wind and Fire Ringlets - Nezha gains <Fire ATK Up>, <Wind ATK Up>, inflicts <Skill Sealed> on all allies \n\n"}
         ]},
         {"apollohl" : [
+            {"name" : "ApolloHL"},
             {"trigger" : "**Join Trigger** \n Casts Helios Drive \n\n"},
             {"trigger" : "**75% Trigger** \n Fills all charge diamonds\n\n"},
             {"trigger" : "**50% Trigger** \n Casts Helios Drive\n \n"},
@@ -221,19 +228,73 @@
             {"trigger" : "**Note** \n Helios Drive - Inflict <Shorted> and stackable <Hostility Up> on one ally \n\n"}
         ]},
         {"daohl" : [
+            {"name" : "DAOHL"},
             {"trigger" : "**75% Trigger** \n Fills all charge diamonds\n\n"},
             {"trigger" : "**50% Trigger** \n Casts Fallen Sword - 2 hits of ~15,000 dark dmg to random allies and inflict <C.A. Sealed>\n \n"},
             {"trigger" : "**25% Trigger** \n Casts Sterling Sea - 50% plain dmg to all allies, inflict <20% Charge Bar Lowered> on all allies \n\n"},
             {"trigger" : "**5% Trigger** \n Casts Fallen Sword - 2 hits of ~40,000 dark dmg to random allies and inflict <C.A. Sealed>\n \n"},
             {"trigger" : "**Note** \n Sterling Sea white damage WILL bypass anything (dmg cuts, death preventing skills, unchallenged, etc) \n\n"}
         ]},
+        {"prometheushl" : [
+            {"name" : "PrometheusHL"},
+            {"trigger" : "**Upon Entering Overdrive** \n Fills all charge diamonds\n\n"},
+            {"trigger" : "**If an Ally has <Omen of Caucasus>** \n On the next turn Casts Goddess Flame - Fire dmg to all allies and inflicts <Fire DEF Down>, <Water ATK Down>. If the ally has <Omen of Caucasus>, they are inflicted with <Binding of Caucasus>\n \n"},
+            {"trigger" : "**75% Trigger** \n Every turn that is a multiple of 3, Casts Caucasus - Inflicts <Omen of Caucasus> and <Flame of Justice> on one ally (bypasses veil) \n\n"},
+            {"trigger" : "**25% Trigger** \n Every turn that is even, Casts Caucasus - Inflicts <Omen of Caucasus> and <Flame of Justice> on one ally (bypasses veil) \n \n"},
+            {"trigger" : "**Note** \n <Binding of Caucasus> - Attack and defense are lowered, can't use C.A. or Skills \n\n"}
+        ]},
+        {"whalehl" : [
+            {"name" : "WhaleHL"},
+            {"trigger" : "**75% Trigger** \n Casts Sanctuary - Water damage to all allies, remove debuffs from self and remove all buffs from all allies. Gain <90% DMG Cut> and <Resounding Sanctuary>\n\n"},
+            {"trigger" : "**50% Trigger** \n Casts Sanctuary - Water damage to all allies, remove debuffs from self and remove all buffs from all allies. Gain <90% DMG Cut> and <Resounding Sanctuary>\n \n"},
+            {"trigger" : "**10% Trigger** \n Immune to <Paralysis> \n\n"},
+            {"trigger" : "**Note** \n Dispels should not be used on <DMG Cut> but rather on the <ATK Up> that Ca Ong gains when using Resonance Melody. \n\n In order to remove <Resounding Sanctuary>, simply keep attacking until one party gets hit with Resonance Melody. That party will gain <Resounding Sanctuary>, which will dispel the <DMG Cut> on their next attack "}
+        ]},
+        {"gilgameshhl" : [
+            {"name" : "GilgameshHL"},
+            {"trigger" : "**Upon Entering Overdrive** \n Fills all charge diamonds. Usually occurs around 90% and 50%\n\n"},
+            {"trigger" : "**75% Trigger** \n Casts Force Break - Massive earth dmg to all allies. Inflict <Earth DEF Down> and <Wind ATK Down>. Removes all debuffs from self\n\n"},
+            {"trigger" : "**25% Trigger** \n Casts Force Break - Massive earth dmg to all allies. Inflict <Earth DEF Down> and <Wind ATK Down>. Removes all debuffs from self\n \n"},
+            {"trigger" : "**10% Trigger** \n Base Charge Diamonds changes to <><>, gains immunity to <Paralysis> \n\n"}
+        ]},
+        {"morrignahl" : [
+            {"name" : "MorrignaHL"},
+            {"trigger" : "**75% Trigger** \n Casts Chuchulain - Inflict <ATK Down> on all allies. Foe gains <ATK Up>, <TA Up>, and <DEF Up>\n\n"},
+            {"trigger" : "**50% Trigger** \n Casts Nemain - Foe gains <Repel>\n \n"},
+            {"trigger" : "**25% Trigger** \n Casts Chuchulain - Inflict <ATK Down> on all allies. Foe gains <ATK Up>, <TA Up>, and <DEF Up>\n\n"},
+            {"trigger" : "**Notes** \n No Mode Bar. That's right Esser 5* users and abusers, GTFO \n\n Recommended to dispel the 75% and 25% triggers, use OK sticker here \n\n The repel at 50% will kill you no matter what, heavily recommended to dispel"}
+        ]},
+        {"hectorhl" : [
+            {"name" : "HectorHL"},
+            {"trigger" : "**99%, 80%, 70%, 60% Trigger** \n Casts Dread Shot - Multi-hit light dmg to random allies. Gains <ATK Up>. Inflicts <Piercing Dawn> on all allies and <Hostility Up> on one ally \n\n"},
+            {"trigger" : "**50% Trigger** \n Casts Invincible Arrow - Gains <50% DMG Cut>, <Light ATK Up>. Inflicts <100% Charge Cut>, <Piercing Dawn>, and removes all buffs from one ally \n\n"},
+            {"trigger" : "**10% Trigger** \n Casts Invincible Arrow - Gains <50% DMG Cut>, <Light ATK Up>. Inflicts <100% Charge Cut>, <Piercing Dawn>, and removes all buffs from one ally \n\n"},
+            {"trigger" : "**Note** \n <Piercing Dawn> - Can't be healed"}
+        ]},
         {"anubishl" : [
-            {"trigger" : "**80% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Dispel all allies \n\n"},
-            {"trigger" : "**60% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Dispel all allies\n \n"},
-            {"trigger" : "**40% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Dispel all allies \n\n"},
-            {"trigger" : "**20% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Dispel all allies \n\n"},
-            {"trigger" : "**10% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Dispel all allies \n\n"},
+            {"name" : "AnubisHL"},
+            {"trigger" : "**80%, 60%, 40%, 20%, 10% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Remove all buffs from all allies \n\n"},
             {"trigger" : "**Note** \n Ophios damage starts at ~7,000, ramping up to ~20,000 towards the end of the raid"}
+        ]},
+        {"bahahl" : [
+            {"name" : "BahaHL"},
+            {"trigger" : "**100% Trigger** \n Casts Ragnarok Field II - Inflicts <Ragnarok Field>, <Skill Sealed>, <C.A. Sealed>, and <Cursed> to all allies\n\n"},
+            {"trigger" : "**Note** \n <Ragnarok Field> - HP is lowered every turn (amount varies based on number of people in raid)\n\n"},
+            {"trigger" : "**90% Trigger** \n Fills all charge diamonds. Moves to fire phase \n\n"},
+            {"trigger" : "**Fire Phase Notes** \n Nothing really scary here, just keep attacking \n\n"},
+            {"trigger" : "**80% Trigger** \n Fills all charge diamonds. Moves to water phase\n\n"},
+            {"trigger" : "**Water Phase Notes** \n A number of annoying debuffs so prepare your veil/clear\n\n"},
+            {"trigger" : "**70% Trigger** \n Fills all charge diamonds. Moves to earth phase\n\n"},
+            {"trigger" : "**Earth Phase Notes** \n Earth Crash III (N Ougi) and Earth Crash IV (OD Ougi) are almost guaranteed to kill without a damage cut / phalanx\n\n"},
+            {"trigger" : "**60% Trigger** \n Fills all charge diamonds. Moves to wind phase\n\n"},
+            {"trigger" : "**Wind Phase Notes ** \n Bahamut may set all allies HP to 1 on ougi, so be careful\n\n"},
+            {"trigger" : "**50% Trigger** \n Fills all charge diamonds. Moves to dark phase\n\n"},
+            {"trigger" : "**Note** \n This is where parabots should para. If your raid has a parabot, do not trigger any ougis in this phase and wait for para to land \n The OD Ougi (Hyper Dimension) is an almost guaranteed kill and cannot be avoided no matter what. Avoid triggering AT ALL COSTS \n The N Ougi (Abdak Force) will give Bahamut an 80% cut to a random element and should be dispelled\n\n"},
+            {"trigger" : "**25% Trigger** \n Fills all charge diamonds. Moves to final phase\n\n"},
+            {"trigger" : "**10% Trigger** \n Base Charge Diamonds changes to <> \n\n"},
+            {"trigger" : "**2% Trigger** \n Base Charge Diamonds changes to <><><><><>\n\n"},
+            {"trigger" : "**1% Trigger** \n Casts Supernova - Deal white dmg equal to 95% of the target's max hp to all allies\n\n"},
+            {"trigger" : "**Final Phase Notes** \n N Ougi can be tanked with a phalanx, OD Ougi must have a full cut, whether using a dark buncle, athena, or some other method\n\n"}
         ]}
     ]
 }

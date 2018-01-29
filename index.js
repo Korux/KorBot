@@ -66,7 +66,9 @@ bot.on('message',(message) => {
         if(isBoss){
             var bossTriggers = botInfo.BossTriggerInfo[bossIndex][boss.toLowerCase()];
             bossTriggers.forEach(function(thisTrigger){
-                result += thisTrigger.trigger;
+                if(Object.keys(thisTrigger) == "trigger"){
+                   result += thisTrigger.trigger; 
+                }
             });
             result += '```';
             message.channel.send(result);
@@ -77,18 +79,16 @@ bot.on('message',(message) => {
     }
 
     if(message.content == "!listtriggers"){
-        var currTriggers = 'The Current Bosses in my Database are: \n ```';
-        currTriggers = currTriggers + Object.keys(botInfo.BossTriggerInfo[0])[0]+'\n';
+        var currTriggers = 'The Current Bosses in my Database are: \n ```\n';
         for(var i = 0; i < botInfo.BossTriggerInfo.length; i++){
-            currTriggers = currTriggers + Object.keys(botInfo.BossTriggerInfo[i])[0]+'\n';
+            currTriggers = currTriggers + botInfo.BossTriggerInfo[i][Object.keys(botInfo.BossTriggerInfo[i])[0]][0].name +'\n';
         }
         currTriggers += '```';
         message.channel.send(currTriggers);
     }
 
     if(message.content == "!listroles"){
-        var currRoles ='The Current Roles Are: \n ```';
-        currRoles = currRoles + botInfo.allRoles[0].name + '\n';
+        var currRoles ='The Current Roles Are: \n ```\n';
         botInfo.allRoles.forEach(function(currRole){
             currRoles = currRoles + currRole.name + '\n';
         });
