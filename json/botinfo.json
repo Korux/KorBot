@@ -199,6 +199,34 @@
             {"trigger" : "**50% Trigger** \n Casts And The World Stood Still - Gains <ATK Up>, Inflicts <Sleep>, <Skill Sealed>, <C.A. Sealed> and <Glacial Seal> on all allies \n\n"},
             {"trigger" : "**25% Trigger** \n Fills all charge diamonds \n\n"}
         ]},
+        {"medusahl" : [
+            {"trigger" : "--Snek-- \n\n**50% Trigger**\n Casts Lethal Gaze - Single hit earth dmg, inflicts <50% charge cut>\n\n"},
+            {"trigger" : "--Ass-- \n\n**100% Trigger** \n Casts Petrifying Stare - Multi-hit earth dmg to random allies, inflicts <Stone> for 2 turns \n\n"},
+            {"trigger" : "**75% Trigger** \n Fills all charge diamonds\n \n"},
+            {"trigger" : "**50% Trigger** \n Casts Medusiana - Big earth dmg to all allies, inflict <Skill Sealed> for 2 turns \n\n"},
+            {"trigger" : "**25% Trigger** \n Fills all charge diamonds \n\n"},
+            {"trigger" : "**10% Trigger** \n Casts Medusiana - Big earth dmg to all allies, inflict <Skill Sealed> for 2 turns \n\n"}
+        ]},
+        {"nezhahl" : [
+            {"trigger" : "**75% Trigger** \n Fills all charge diamonds \n\n"},
+            {"trigger" : "**50% Trigger** \n Casts Flamelance: Accendo - 10 hits of wind and fire dmg to random allies, totaling ~15,000 - 20,000\n\n"},
+            {"trigger" : "**25% Trigger** \n Fills all charge diamonds\n \n"},
+            {"trigger" : "**10% Trigger** \n Casts Wind and Fire Ringlets - Nezha gains <Fire ATK Up>, <Wind ATK Up>, inflicts <Skill Sealed> on all allies \n\n"}
+        ]},
+        {"apollohl" : [
+            {"trigger" : "**Join Trigger** \n Casts Helios Drive \n\n"},
+            {"trigger" : "**75% Trigger** \n Fills all charge diamonds\n\n"},
+            {"trigger" : "**50% Trigger** \n Casts Helios Drive\n \n"},
+            {"trigger" : "**25% Trigger** \n Casts Helios Drive \n\n"},
+            {"trigger" : "**Note** \n Helios Drive - Inflict <Shorted> and stackable <Hostility Up> on one ally \n\n"}
+        ]},
+        {"daohl" : [
+            {"trigger" : "**75% Trigger** \n Fills all charge diamonds\n\n"},
+            {"trigger" : "**50% Trigger** \n Casts Fallen Sword - 2 hits of ~15,000 dark dmg to random allies and inflict <C.A. Sealed>\n \n"},
+            {"trigger" : "**25% Trigger** \n Casts Sterling Sea - 50% plain dmg to all allies, inflict <20% Charge Bar Lowered> on all allies \n\n"},
+            {"trigger" : "**5% Trigger** \n Casts Fallen Sword - 2 hits of ~40,000 dark dmg to random allies and inflict <C.A. Sealed>\n \n"},
+            {"trigger" : "**Note** \n Sterling Sea white damage WILL bypass anything (dmg cuts, death preventing skills, unchallenged, etc) \n\n"}
+        ]},
         {"anubishl" : [
             {"trigger" : "**80% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Dispel all allies \n\n"},
             {"trigger" : "**60% Trigger** \n Casts Ophios - Dark dmg to all allies, inflict <Zombified>. Dispel all allies\n \n"},
