@@ -1,10 +1,7 @@
 {
-    "allRoles":[
-        {"name" : "6manHL"},
-        {"name" : "Slime"}
-    ],
     "allCommands":[
         {"name" : "!emo"},
+        {"name" : "!updateroles"},
         {"name" : "!addrole"},
         {"name" : "!removerole"},
         {"name" : "!listroles"},

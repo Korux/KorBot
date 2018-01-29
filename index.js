@@ -5,6 +5,7 @@ const botDetails = require('./json/package.json');
 const fs = require('fs');
 let rawData = fs.readFileSync('./json/botinfo.json');
 const botInfo = JSON.parse(rawData);
+var roles;
 
 bot.login('NDA2NzU4OTQ5MTc0NTA5NTc4.DU3nYw.JuyMFH9XdlTdXYFFstxYKP9epNg');
 
@@ -15,11 +16,23 @@ bot.on('ready',(ready) => {
 
 bot.on('message',(message) => {
 
+    if(message.content == "!updateroles"){
+        roles = message.guild.roles;
+        message.channel.send("Roles Updated! the roles Are:\n");
+        var output = '```\n';
+        roles.forEach(function(role){
+            output = output + role.name + '\n';
+        });
+        output += '```';
+        message.channel.send(output);
+
+    }
+
     if(message.content.substr(0,9) == "!addrole " || message.content.substr(0,12) == "!removerole "){ 
         var commandType = message.content.split(" ")[0]; 
         var roleStr = message.content.split(" ")[1];  
         var role = "";
-        botInfo.allRoles.forEach(function(currRole){
+        roles.forEach(function(currRole){
             if(roleStr.toLowerCase() == currRole.name.toLowerCase()){
                 role = message.guild.roles.find("name", currRole.name);
             }
@@ -32,15 +45,28 @@ bot.on('message',(message) => {
                 if(message.member.roles.has(role.id)){
                     message.reply("You already have this role");
                 } else{
-                    message.reply("You joined " + role.name);
-                    message.member.addRole(role).catch(console.error);
+                    message.member.addRole(role).catch(console.error); 
+                    setTimeout(function(){
+                        if(message.member.roles.has(role.id)){
+                            message.reply("You joined " + role.name);
+                        } else {
+                            message.reply("I do not have permission to modify this role");
+                        }
+                    },200);
                 } 
+                
             } else if (commandType == "!removerole"){
                 if(!message.member.roles.has(role.id)){
                     message.reply("You do not have this role");
                 } else{
-                    message.reply("You left " + role.name);
-                    message.member.removeRole(role).catch(console.error);
+                    message.member.removeRole(role).catch(console.error); 
+                    setTimeout(function(){
+                        if(!(message.member.roles.has(role.id))){
+                            message.reply("You left " + role.name);
+                        } else {
+                            message.reply("I do not have permission to modify this role");
+                        }
+                    },200);
                 } 
             } else {
                 message.channel.send("Error! Contact Dev Please");
@@ -89,7 +115,7 @@ bot.on('message',(message) => {
 
     if(message.content == "!listroles"){
         var currRoles ='The Current Roles Are: \n ```\n';
-        botInfo.allRoles.forEach(function(currRole){
+        roles.forEach(function(currRole){
             currRoles = currRoles + currRole.name + '\n';
         });
         currRoles += '```';
