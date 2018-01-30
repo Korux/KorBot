@@ -60,14 +60,19 @@ bot.on('message',(message) => {
                 if(message.member.roles.has(role.id)){
                     message.reply("You already have this role");
                 } else{
-                    message.member.addRole(role).catch(console.error); 
-                    setTimeout(function(){
-                        if(message.member.roles.has(role.id)){
-                            message.reply("You joined " + role.name);
-                        } else {
-                            message.reply("I do not have permission to modify this role");
-                        }
-                    },200);
+                    if(role.name == 'bot'){
+                        message.reply("Wait a minute... you're not a bot!");
+                    }else{
+                        message.member.addRole(role).catch(console.error); 
+                        setTimeout(function(){
+                            if(message.member.roles.has(role.id)){
+                                message.reply("You joined " + role.name);
+                            } else {
+                                message.reply("I do not have permission to modify this role");
+                            }
+                        },200);
+                    }
+                    
                 } 
                 
             } else if (commandType == "!removerole"){
@@ -130,7 +135,7 @@ bot.on('message',(message) => {
 
     if(message.content == "!listroles"){
         var currRoles ='The Current Roles Are: \n ```\n';
-        roles.forEach(function(currRole){
+        rolesInfo.allRoles.forEach(function(currRole){
             currRoles = currRoles + currRole.name + '\n';
         });
         currRoles += '```';
@@ -346,7 +351,7 @@ bot.on('message',(message) => {
         }
 
         var loadedImage;
-        
+
         function measureText(font, text) {
             var x = 0;
             for (var i = 0; i < text.length; i++) {
