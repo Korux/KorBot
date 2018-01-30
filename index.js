@@ -308,24 +308,43 @@ bot.on('message',(message) => {
         message.reply("I choose " + "**" + options[pick].trim() + "**");
     }
 
-    if(message.content.substr(0,9) == '!buttblow'){
+    if(message.content.substr(0,9) == '!buttblow' || message.content.substr(0,7) == '!banana' || message.content.substr(0,5) == '!poke'){
+
         var url = message.mentions.users.first().avatarURL;
-        var originalFile = './action_images/buttblow_out.png';
-        var outputFile = './action_images/buttblow_dp.png';
-        var avatarFile = './action_images/buttblow_avatar.png';
+        var originalFile;
+        var avatarFile = './action_images/avatar.png';;
+        var outputFile;
+        var width,height,x,y;
+
+        if(message.content.substr(0,9) == '!buttblow'){
+            originalFile = './action_images/buttblow.png';
+            outputFile = './action_images/buttblow_out.png'; 
+            width = 80;height = 80;
+            x = 305; y = 185; 
+        }else if(message.content.substr(0,7) == '!banana'){
+            originalFile = './action_images/banana.png';
+            outputFile = './action_images/banana_out.png';
+            width = 60;height = 60;
+            x = 241; y = 172; 
+        }else if(message.content.substr(0,5) == '!poke'){
+            originalFile = './action_images/poke.png';
+            outputFile = './action_images/poke_out.png';
+            width = 70;height = 70;
+            x = 335; y = 160; 
+        }
 
         if(url != null){
             var obj = url.indexOf('.png');
             var trueURL = url.substr(0,obj+4);
             jimp.read(trueURL)
             .then(function (image) {
-                image.resize(80, 80,jimp.RESIZE_BILINEAR)                               
+                image.resize(width, height,jimp.RESIZE_BILINEAR)                               
                 .write(avatarFile,function(){
                     jimp.read(avatarFile)
                     .then(function (image){
                         jimp.read(originalFile)
-                        .then(function(buttImg){
-                            buttImg.composite(image,305,185)
+                        .then(function(actionImg){
+                            actionImg.composite(image,x,y)
                             .write(outputFile,function(){
                                 message.channel.send({file:outputFile}).catch(console.error());
                             });  
@@ -341,8 +360,8 @@ bot.on('message',(message) => {
 
 
     if(message.content.substr(0,5) == "!slap"){
-        var outputFile = "./action_images/slap_name.png";
-        var originalFile = "./action_images/slap_out.png";
+        var outputFile = "./action_images/slap_out.png";
+        var originalFile = "./action_images/slap.png";
         var imageCaption;
         if(message.mentions.users.array().length == 0){
             imageCaption = message.content.substr(6);
