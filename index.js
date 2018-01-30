@@ -305,37 +305,38 @@ bot.on('message',(message) => {
 
     if(message.content.substr(0,9) == '!buttblow'){
         var url = message.mentions.users.first().avatarURL;
-        var obj = url.indexOf('.png');
-        var trueURL = url.substr(0,obj+4);
         var originalFile = './action_images/buttblow_out.png';
         var outputFile = './action_images/buttblow_dp.png';
         var avatarFile = './action_images/buttblow_avatar.png';
 
-        jimp.read(trueURL)
-        .then(function (image) {
-            image.resize(80, 80,jimp.RESIZE_BILINEAR)                      
-            .rotate(20,true)             
-            .write(avatarFile,function(){
-                jimp.read(avatarFile)
-                .then(function (image){
-                    jimp.read(originalFile)
-                    .then(function(buttImg){
-                        buttImg.composite(image,285,168)
-                        .write(outputFile,function(){
-                            message.channel.send({file:outputFile}).catch(console.error());
-                        });  
+        if(url != null){
+            var obj = url.indexOf('.png');
+            var trueURL = url.substr(0,obj+4);
+            jimp.read(trueURL)
+            .then(function (image) {
+                image.resize(80, 80,jimp.RESIZE_BILINEAR)                               
+                .write(avatarFile,function(){
+                    jimp.read(avatarFile)
+                    .then(function (image){
+                        jimp.read(originalFile)
+                        .then(function(buttImg){
+                            buttImg.composite(image,305,185)
+                            .write(outputFile,function(){
+                                message.channel.send({file:outputFile}).catch(console.error());
+                            });  
+                        });
                     });
                 });
-            });
 
-        }).catch(function(err){
-            console.error(err);
-        });
+            }).catch(function(err){
+                console.error(err);
+            });
+        }
     }
 
 
     if(message.content.substr(0,5) == "!slap"){
-        var fileName = "./action_images/slap_name.png";
+        var outputFile = "./action_images/slap_name.png";
         var originalFile = "./action_images/slap_out.png";
         var imageCaption;
         if(message.mentions.users.array().length == 0){
@@ -343,9 +344,21 @@ bot.on('message',(message) => {
         } else {
             imageCaption = message.mentions.users.first().username;
         }
-       
-        var xVal = 45 - (imageCaption.length*5);
+
         var loadedImage;
+        
+        function measureText(font, text) {
+            var x = 0;
+            for (var i = 0; i < text.length; i++) {
+                if (font.chars[text[i]]) {
+                    x += font.chars[text[i]].xoffset
+                        + (font.kernings[text[i]] && font.kernings[text[i]][text[i + 1]] ? font.kernings[text[i]][text[i + 1]] : 0)
+                        + (font.chars[text[i]].xadvance || 0);
+                }
+            }
+            return x;
+        };
+
         
         jimp.read(originalFile)
             .then(function (image) {
@@ -353,14 +366,11 @@ bot.on('message',(message) => {
                 return jimp.loadFont(jimp.FONT_SANS_16_BLACK);
             })
             .then(function (font) {
-                loadedImage.print(font, 130+xVal, 230, imageCaption)
-                            .write(fileName);
-            })
-            .then(function(){
-                setTimeout(function(){
-                    message.channel.send({file:"./action_images/slap_name.png"});
-                },200);
-                
+                var xOffset = measureText(font, imageCaption);
+                loadedImage.print(font, 168-(xOffset/2), 230, imageCaption)
+                .write(outputFile,function(){
+                    message.channel.send({file:outputFile});
+                });
             })
             .catch(function (err) {
                 console.error(err);
