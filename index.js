@@ -27,11 +27,15 @@ bot.on('message',(message) => {
             newRoles.allRoles.push({name : role.name});
         });
         json = JSON.stringify(newRoles);
-        fs.writeFileSync('./json/roles.json', json, 'utf8');
-        output += '```';
-        message.channel.send(output);
-        rawDataRoles = fs.readFileSync("./json/roles.json");
-        rolesInfo = JSON.parse(rawDataRoles);
+        fs.writeFile('./json/roles.json', json, 'utf8',function(){
+            rawDataRoles = fs.readFileSync("./json/roles.json");
+            rolesInfo = JSON.parse(rawDataRoles);
+            output += '```';
+            message.channel.send(output);
+ 
+            
+        });
+        
     }
 
     if(message.content == "!readjsonroles"){
@@ -45,7 +49,13 @@ bot.on('message',(message) => {
 
     if(message.content.substr(0,9) == "!addrole " || message.content.substr(0,12) == "!removerole "){ 
         var commandType = message.content.split(" ")[0]; 
-        var roleStr = message.content.split(" ")[1];  
+        var roleStr;
+        if(message.content.substr(0,9) == '!addrole '){
+            roleStr = message.content.substr(9);
+        } else {
+            roleStr = message.content.substr(12);
+        }
+ 
         var role = "";
         rolesInfo.allRoles.forEach(function(currRole){
             if(roleStr.toLowerCase() == currRole.name.toLowerCase()){
@@ -63,14 +73,11 @@ bot.on('message',(message) => {
                     if(role.name == 'bot'){
                         message.reply("Wait a minute... you're not a bot!");
                     }else{
-                        message.member.addRole(role).catch(console.error); 
-                        setTimeout(function(){
-                            if(message.member.roles.has(role.id)){
-                                message.reply("You joined " + role.name);
-                            } else {
-                                message.reply("I do not have permission to modify this role");
-                            }
-                        },200);
+                        message.member.addRole(role).then(function(){
+                            message.reply("You joined " + role.name);
+                        }).catch(function(){
+                            message.reply("I do not have permission to modify this role");
+                        });
                     }
                     
                 } 
@@ -79,19 +86,13 @@ bot.on('message',(message) => {
                 if(!message.member.roles.has(role.id)){
                     message.reply("You do not have this role");
                 } else{
-                    message.member.removeRole(role).catch(console.error); 
-                    setTimeout(function(){
-                        if(!(message.member.roles.has(role.id))){
-                            message.reply("You left " + role.name);
-                        } else {
-                            message.reply("I do not have permission to modify this role");
-                        }
-                    },200);
+                    message.member.removeRole(role).then(function(){
+                        message.reply("You left " + role.name);
+                    }).catch(function(){
+                        message.reply("I do not have permission to modify this role");
+                    });
                 } 
-            } else {
-                message.channel.send("Error! Contact Dev Please");
             }
-            
         }
         
     } 
@@ -310,7 +311,7 @@ bot.on('message',(message) => {
 
     if(message.content.substr(0,9) == '!buttblow' || message.content.substr(0,7) == '!banana' || message.content.substr(0,5) == '!poke'){
 
-        var url = message.mentions.users.first().avatarURL;
+        var url = message.mentions.users.first().displayAvatarURL;
         var originalFile;
         var avatarFile = './action_images/avatar.png';;
         var outputFile;
