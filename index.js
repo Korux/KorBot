@@ -30,7 +30,6 @@ bot.on('message',(message) => {
         fs.writeFileSync('./json/roles.json', json, 'utf8');
         output += '```';
         message.channel.send(output);
-        message.channel.send("data written to: roles.json");
         rawDataRoles = fs.readFileSync("./json/roles.json");
         rolesInfo = JSON.parse(rawDataRoles);
     }
@@ -42,15 +41,6 @@ bot.on('message',(message) => {
         });
         output += '```';
         message.channel.send(output);
-    }
-
-    if(message.content == '!dptest'){
-        var url = message.author.avatarURL;
-        var obj = url.indexOf('.png');
-        var trueURL = url.substr(0,obj+4);
-        console.log(obj);
-        console.log(trueURL);
-        message.channel.send({file:trueURL}).catch(console.error);
     }
 
     if(message.content.substr(0,9) == "!addrole " || message.content.substr(0,12) == "!removerole "){ 
@@ -311,6 +301,36 @@ bot.on('message',(message) => {
         options = options.filter(word => word.trim() != '');
         var pick = Math.floor(Math.random() * options.length);
         message.reply("I choose " + "**" + options[pick].trim() + "**");
+    }
+
+    if(message.content.substr(0,9) == '!buttblow'){
+        var url = message.mentions.users.first().avatarURL;
+        var obj = url.indexOf('.png');
+        var trueURL = url.substr(0,obj+4);
+        var originalFile = './action_images/buttblow_out.png';
+        var outputFile = './action_images/buttblow_dp.png';
+        var avatarFile = './action_images/buttblow_avatar.png';
+
+        jimp.read(trueURL)
+        .then(function (image) {
+            image.resize(80, 80,jimp.RESIZE_BILINEAR)                      
+            .rotate(20,true)             
+            .write(avatarFile,function(){
+                jimp.read(avatarFile)
+                .then(function (image){
+                    jimp.read(originalFile)
+                    .then(function(buttImg){
+                        buttImg.composite(image,285,168)
+                        .write(outputFile,function(){
+                            message.channel.send({file:outputFile}).catch(console.error());
+                        });  
+                    });
+                });
+            });
+
+        }).catch(function(err){
+            console.error(err);
+        });
     }
 
 
