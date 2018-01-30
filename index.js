@@ -50,11 +50,12 @@ bot.on('message',(message) => {
     if(message.content.substr(0,9) == "!addrole " || message.content.substr(0,12) == "!removerole "){ 
         var commandType = message.content.split(" ")[0]; 
         var roleStr;
-        if(message.content.substr(0,9) == '!addrole '){
+        if(commandType == '!addrole'){
             roleStr = message.content.substr(9);
         } else {
             roleStr = message.content.substr(12);
         }
+        roleStr = roleStr.trim();
  
         var role = "";
         rolesInfo.allRoles.forEach(function(currRole){
