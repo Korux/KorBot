@@ -177,47 +177,18 @@ bot.on('message',(message) => {
                     result = result + "<SSR Summon " + botInfo.SSRSummons[Math.floor(Math.random() * botInfo.SSRSummons.length)].name + "> \n"; 
                 } else{
                     var rollResult = Math.floor(Math.random() * (botInfo.SSRCharasNonLimited.length + botInfo.SSRCharasLimited.length));
-                        if(rollResult < botInfo.SSRCharasNonLimited.length){
-                            var alreadyDrawn = drawnCharas.forEach(function(drawn){
-                                if(drawn == botInfo.SSRCharasNonLimited[rollResult].name){
-                                    return true;
-                                }
-                                return false;
-                            });
-                            if(alreadyDrawn){
-                                result = result + "<Gold Moon> \n"
-                            } else {
-                                result = result + "<SSR Character " + botInfo.SSRCharasNonLimited[rollResult].name + "> \n";
-                                drawnCharas.push(botInfo.SSRCharasNonLimited[rollResult].name);
-                            }
-                            
-                        } else {
-                            var alreadyDrawn = drawnCharas.forEach(function(drawn){
-                                if(drawn == botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name){
-                                    return true;
-                                }
-                                return false;
-                            });
-                            if(alreadyDrawn){
-                                result = result + "<Gold Moon> \n"
-                            } else {
-                                result = result + "<SSR Character " +  botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name + "> \n";
-                                drawnCharas.push(botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name);
-                            }
-                            
-                        }
-                }
-                
+                    if(rollResult < botInfo.SSRCharasNonLimited.length){
+                        result = result + "<SSR Character " + botInfo.SSRCharasNonLimited[rollResult].name + "> \n";
+                        drawnCharas.push(botInfo.SSRCharasNonLimited[rollResult].name);  
+                    } else {
+                        result = result + "<SSR Character " +  botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name + "> \n";
+                        drawnCharas.push(botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name);  
+                    }
+                }    
             }
         }
-        var sparkOptions = ["You Sparked Your Dick Pick",
-        "You sparked the E-sport pick",
-        "You sparked the OP Grand Series weapon, fuck your Dama Bar stash",
-        "You said 'fuck it' and sparked the meme pick"
-        ]
         ssrPercent = ssrCount*100 / 300;
         result = result + "<" + ssrCount + " SSRs" + ">, " + ssrPercent + '% \n';
-        result = result + sparkOptions[Math.floor(Math.random()*sparkOptions.length)];
         message.channel.send("```xml\n" + result + '```');
     }
 
