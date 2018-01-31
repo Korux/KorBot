@@ -146,7 +146,7 @@ bot.on('message',(message) => {
 
     if(message.content.substr(0,5) == "!emo "){
         var emoteStr = message.content.substr(5);
-        emoteStr = "https://raw.githubusercontent.com/Korux/poi_bot/master/images/" + emoteStr + ".png";
+        emoteStr = "./images/" + emoteStr + ".png";
         message.channel.send({file:emoteStr}).catch(console.error);
     }
 
