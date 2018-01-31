@@ -6,6 +6,7 @@
         {"name" : "!removerole"},
         {"name" : "!listroles"},
         {"name" : "!slap"},
+        {"name" : "!slam"},
         {"name" : "!buttblow"},
         {"name" : "!banana"},
         {"name" : "!poke"},

@@ -310,7 +310,7 @@ bot.on('message',(message) => {
         message.reply("I choose " + "**" + options[pick].trim() + "**");
     }
 
-    if(message.content.substr(0,9) == '!buttblow' || message.content.substr(0,7) == '!banana' || message.content.substr(0,5) == '!poke'){
+    if(message.content.substr(0,9) == '!buttblow' || message.content.substr(0,7) == '!banana' || message.content.substr(0,5) == '!poke' || message.content.substr(0,5) == '!slam'){
 
         var url = message.mentions.users.first().displayAvatarURL;
         var originalFile;
@@ -333,6 +333,11 @@ bot.on('message',(message) => {
             outputFile = './action_images/poke_out.png';
             width = 70;height = 70;
             x = 335; y = 160; 
+        }else if(message.content.substr(0,5) == '!slam'){
+            originalFile = './action_images/slam.png';
+            outputFile = './action_images/slam_out.png';
+            width = 80;height = 80;
+            x = 95; y = 210; 
         }
 
         if(url != null){
