@@ -160,36 +160,76 @@ bot.on('message',(message) => {
     }
 
     if(message.content == "!spark"){
+
+        function checkDupes(arr,testAgainst){
+            return new Promise (function(resolve,reject){
+                arr.forEach(function(val){
+                    if(testAgainst == val){
+                        resolve(['true']);
+                    }
+                });
+                resolve(['false',testAgainst]);
+            });
+        }
+
         var randNum;
         var drawnCharas = [];
         var possibleSSRS = ["Summon","Gold Moon","Character"];
-        var result = "You Got: \n";
+        var result='';
         var ssrCount = 0;
         var ssrPercent = 0.0;
-        for(var i = 0; i < 300;i++){
-            randNum = Math.floor(Math.random()*100);
-            if(randNum < 6){
-                ssrCount ++;
-                var SSR = possibleSSRS[Math.floor(Math.random()*3)];
-                if(SSR == "Gold Moon"){
-                    result = result + "<Gold Moon> \n";
-                } else if (SSR == "Summon") { 
-                    result = result + "<SSR Summon " + botInfo.SSRSummons[Math.floor(Math.random() * botInfo.SSRSummons.length)].name + "> \n"; 
-                } else{
-                    var rollResult = Math.floor(Math.random() * (botInfo.SSRCharasNonLimited.length + botInfo.SSRCharasLimited.length));
-                    if(rollResult < botInfo.SSRCharasNonLimited.length){
-                        result = result + "<SSR Character " + botInfo.SSRCharasNonLimited[rollResult].name + "> \n";
-                        drawnCharas.push(botInfo.SSRCharasNonLimited[rollResult].name);  
-                    } else {
-                        result = result + "<SSR Character " +  botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name + "> \n";
-                        drawnCharas.push(botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name);  
+        var moonCount;
+
+        function doSpark(){
+            return new Promise(function(resolve,reject){
+                for(var i = 0; i < 300;i++){
+                        randNum = Math.floor(Math.random()*100);
+                        if(randNum < 6){
+                            ssrCount ++;
+                            var SSR = possibleSSRS[Math.floor(Math.random()*3)];
+                            if(SSR == "Gold Moon"){
+                                result = "<Gold Moon> \n" + result;
+                            } else if (SSR == "Summon") { 
+                                result = result + "<SSR Summon " + botInfo.SSRSummons[Math.floor(Math.random() * botInfo.SSRSummons.length)].name + "> \n"; 
+                            } else{
+                                var rollResult = Math.floor(Math.random() * (botInfo.SSRCharasNonLimited.length + botInfo.SSRCharasLimited.length));
+                                
+                                if(rollResult < botInfo.SSRCharasNonLimited.length){
+                                    checkDupes(drawnCharas,botInfo.SSRCharasNonLimited[rollResult].name).then(function(info){
+                                        if(info[0] == 'true'){
+                                            result = result + "<Gold Moon> \n";
+                                        } else {
+                                            result = result + "<SSR Character " + info[1] + "> \n";
+                                            drawnCharas.push(info[1]);
+                                        }
+                                    }).catch(console.error);
+                                    
+                                } else {
+                                    checkDupes(drawnCharas,botInfo.SSRCharasLimited[rollResult - botInfo.SSRCharasNonLimited.length].name).then(function(info){
+                                        if(info[0] == 'true'){
+                                            result = result + "<Gold Moon> \n";
+                                        } else {
+                                            result = result + "<SSR Character " +  info[1] + "> \n";
+                                            drawnCharas.push(info[1]);  
+                                        }
+                                    }).catch(console.error);
+                                    
+                                }
+                            }    
+                        }
                     }
-                }    
-            }
+                resolve();
+            });
         }
-        ssrPercent = ssrCount*100 / 300;
-        result = result + "<" + ssrCount + " SSRs" + ">, " + ssrPercent + '% \n';
-        message.channel.send("```xml\n" + result + '```');
+
+        doSpark().then(function(){
+            ssrPercent = ssrCount*100 / 300;
+            result = 'You got: \n' + result;
+            result = result + "<" + ssrCount + " SSRs" + ">, " + ssrPercent + '% \n';
+            message.channel.send("```xml\n" + result + '```');
+        }).catch(console.error);
+
+    
     }
 
     if(message.content == "!roll10" || message.content == "!roll10 legfes"){
