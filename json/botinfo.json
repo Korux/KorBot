@@ -97,7 +97,7 @@
         {"name" : "Charlotta"},
         {"name" : "Chat Noir"},
         {"name" : "Clarisse"},
-        {"name" : "Clarisse (Light"},
+        {"name" : "Clarisse (Light)"},
         {"name" : "De La Fille"},
         {"name" : "De La Fille (Earth)"},
         {"name" : "Dorothy & Claudia"},
@@ -162,7 +162,8 @@
         {"name" : "Yuisis"},
         {"name" : "Zahlhamelina"},
         {"name" : "Zeta"},
-        {"name" : "Zeta (Dark"}
+        {"name" : "Zeta (Dark)"},
+        {"name" : "Zooey (Light)"}
         ],
     "SSRCharasLimited":[
         {"name" : "Katalina"},
@@ -177,7 +178,8 @@
         {"name" : "Drang"},
         {"name" : "Chevira"},
         {"name" : "Lucio"},
-        {"name" : "Olivia"}
+        {"name" : "Olivia"},
+        {"name" : "SS Zooey"}
     ],
     "BossTriggerInfo":[
         {"jkhl" : [
