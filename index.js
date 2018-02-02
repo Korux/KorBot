@@ -127,7 +127,7 @@ bot.on('message',(message) => {
     }
 
     if(message.content == "!listtriggers"){
-        var currTriggers = 'The Current Bosses in my Database are: \n ```\n';
+        var currTriggers = 'The Current Bosses in my Database are: ```\n';
         for(var i = 0; i < botInfo.BossTriggerInfo.length; i++){
             currTriggers = currTriggers + botInfo.BossTriggerInfo[i][Object.keys(botInfo.BossTriggerInfo[i])[0]][0].name +'\n';
         }
@@ -136,9 +136,12 @@ bot.on('message',(message) => {
     }
 
     if(message.content == "!listroles"){
-        var currRoles ='The Current Roles Are: \n ```\n';
+        var currRoles ='The Current Roles I Have Access to Are: ```\n';
         rolesInfo.allRoles.forEach(function(currRole){
-            currRoles = currRoles + currRole.name + '\n';
+            var thisRole = message.guild.roles.find('name',currRole.name).editable;
+                if(thisRole){
+                    currRoles = currRoles + currRole.name + '\n';
+                }
         });
         currRoles += '```';
         message.channel.send(currRoles);
