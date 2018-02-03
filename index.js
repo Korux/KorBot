@@ -2,17 +2,16 @@ const jimp = require('jimp');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const fs = require('fs');
-const botDetails = require('./package.json');
+const botDetails = require('./json/package.json');
 const rawData = fs.readFileSync('./json/botinfo.json');
 var rawDataRoles = fs.readFileSync('./json/roles.json');
 const botInfo = JSON.parse(rawData);
 var rolesInfo = JSON.parse(rawDataRoles);
 
-//bot.login('NDA2NzU4OTQ5MTc0NTA5NTc4.DU3nYw.JuyMFH9XdlTdXYFFstxYKP9epNg');
-bot.login(process.env.BOT_TOKEN);
+bot.login('NDA2NzU4OTQ5MTc0NTA5NTc4.DU3nYw.JuyMFH9XdlTdXYFFstxYKP9epNg');
 
 bot.on('ready',(ready) => {
-    bot.user.setActivity("in Korux's Basement");
+    bot.user.setActivity("Azur Lane");
     console.log(botDetails.name + " is online");
 });
 
