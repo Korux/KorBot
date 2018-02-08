@@ -1,2 +1,2 @@
-# poi bot
+# unicorn bot
 Discord Bot.
