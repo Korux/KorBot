@@ -8,6 +8,9 @@ var rawDataRoles = fs.readFileSync('./json/roles.json');
 const botInfo = JSON.parse(rawData);
 var rolesInfo = JSON.parse(rawDataRoles);
 
+const botToken = require('./json/bottoken.json');
+
+bot.login(botToken.token);
 
 bot.on('ready',(ready) => {
     bot.user.setActivity("Azur Lane");
