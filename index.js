@@ -73,7 +73,7 @@ bot.on('message',(message) => {
                 if(message.member.roles.has(role.id)){
                     message.reply("You already have this role");
                 } else{
-                    if(role.name == 'bot'){
+                    if(role.name == 'Bots'){
                         message.reply("Wait a minute... you're not a bot!");
                     }else{
                         message.member.addRole(role).then(function(){
