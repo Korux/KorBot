@@ -8,7 +8,7 @@ var rawDataRoles = fs.readFileSync('./json/roles.json');
 const botInfo = JSON.parse(rawData);
 var rolesInfo = JSON.parse(rawDataRoles);
 
-bot.login('NDA2NzU4OTQ5MTc0NTA5NTc4.DU3nYw.JuyMFH9XdlTdXYFFstxYKP9epNg');
+bot.login('FUCK OFF HACKERS');
 
 bot.on('ready',(ready) => {
     bot.user.setActivity("Azur Lane");
