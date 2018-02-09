@@ -7,8 +7,8 @@ const rawData = fs.readFileSync('./json/botinfo.json');
 var rawDataRoles = fs.readFileSync('./json/roles.json');
 const botInfo = JSON.parse(rawData);
 var rolesInfo = JSON.parse(rawDataRoles);
-
 const botToken = require('./json/bottoken.json');
+var botSpamControl = [];
 
 bot.login(botToken.token);
 
@@ -18,6 +18,25 @@ bot.on('ready',(ready) => {
 });
 
 bot.on('message',(message) => {
+
+    if(message.author.id == bot.user.id){
+
+        var now = Math.floor(Date.now());
+        botSpamControl.push(now);
+
+        var match = 0;
+        for(var i = 0; i < botSpamControl.length;i++){
+            if(botSpamControl[i] > now - 1500){
+                match++;
+                if(match >= 5){
+                    console.log("Spam Detected, Terminating Bot");
+                    bot.destroy();
+                }
+            } else if (botSpamControl[i] < now - 1500){
+                botSpamControl = [];
+            }
+        }
+    }
 
     if(message.content == "!updateroles"){
         var newRoles = {allRoles : []};
