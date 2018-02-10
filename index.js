@@ -17,6 +17,10 @@ bot.on('ready',(ready) => {
     console.log(botDetails.name + " is online");
 });
 
+bot.on('error',(err) => {
+    console.log(err);
+});
+
 bot.on('message',(message) => {
 
     if(message.author.id == bot.user.id){
