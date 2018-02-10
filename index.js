@@ -32,21 +32,20 @@ bot.on('message',(message) => {
             .catch(console.error);
         }
 
+        if(message.attachments.array.length > 2 || 
+        message.mentions.everyone ||
+        message.mentions.channels.array.length > 0 ||
+        message.mentions.roles.array.length > 0 || 
+        message.tts){
+            emitSpamError();
+        }
+
         var now = Math.floor(Date.now());
         botSpamControl.push({"time" : now, "message" : message});
 
         var match = 0;
         for(var i = 0; i < botSpamControl.length;i++){
 
-            if(botSpamControl[i].message.attachments.array.length > 2){
-                emitSpamError();
-            }
-
-            if(botSpamControl[i].message.mentions.everyone || 
-                botSpamControl[i].message.mentions.channels.array.length > 0 ||
-                botSpamControl[i].message.mentions.roles.array.length > 0){
-                emitSpamError();
-            }
             if(botSpamControl[i].time > now - 1000){
                 match++;
                 if(match >= 3){
@@ -455,7 +454,7 @@ bot.on('message',(message) => {
                 var xOffset = measureText(font, imageCaption);
                 loadedImage.print(font, 168-(xOffset/2), 230, imageCaption)
                 .write(outputFile,function(){
-                    message.channel.send({file:outputFile});
+                    message.channel.send({file:outputFile}).catch(console.error);
                 });
             })
             .catch(function (err) {
