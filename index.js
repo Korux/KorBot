@@ -25,18 +25,34 @@ bot.on('message',(message) => {
 
     if(message.author.id == bot.user.id){
 
+        function emitSpamError(){
+            bot.destroy().then(function(){
+                console.log("Spam Detected, Terminating Bot");
+            })
+            .catch(console.error);
+        }
+
         var now = Math.floor(Date.now());
-        botSpamControl.push(now);
+        botSpamControl.push({"time" : now, "message" : message});
 
         var match = 0;
         for(var i = 0; i < botSpamControl.length;i++){
-            if(botSpamControl[i] > now - 1500){
+
+            if(botSpamControl[i].message.attachments.array.length > 2){
+                emitSpamError();
+            }
+
+            if(botSpamControl[i].message.mentions.everyone || 
+                botSpamControl[i].message.mentions.channels.array.length > 0 ||
+                botSpamControl[i].message.mentions.roles.array.length > 0){
+                emitSpamError();
+            }
+            if(botSpamControl[i].time > now - 1000){
                 match++;
-                if(match >= 5){
-                    console.log("Spam Detected, Terminating Bot");
-                    bot.destroy();
+                if(match >= 3){
+                    emitSpamError();
                 }
-            } else if (botSpamControl[i] < now - 1500){
+            } else if (botSpamControl[i].time < now - 1000){
                 botSpamControl = [];
             }
         }
