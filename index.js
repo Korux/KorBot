@@ -2,13 +2,31 @@ const jimp = require('jimp');
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const fs = require('fs');
-const botDetails = require('./json/package.json');
+const rp = require('request-promise');
+const cheerio = require('cheerio');
+const botDetails = require('./package.json');
 const rawData = fs.readFileSync('./json/botinfo.json');
 var rawDataRoles = fs.readFileSync('./json/roles.json');
 const botInfo = JSON.parse(rawData);
 var rolesInfo = JSON.parse(rawDataRoles);
 const botToken = require('./json/bottoken.json');
 var botSpamControl = [];
+const options = {
+    uri: `http://game.granbluefantasy.jp/#event/teamraid036/ranking_guild/detail/1`,
+    transform: function (body) {
+      return cheerio.load(body);
+    }
+  };
+
+rp(options)
+.then(($) => {
+    var a = $('.jssdk').text();
+    console.log($('#mobage-game-container').attr('class'));
+    console.log(a);
+})
+.catch((err) => {
+    console.log(err);
+});
 
 bot.login(botToken.token);
 
