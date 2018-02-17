@@ -20,9 +20,12 @@ const options = {
 
 rp(options)
 .then(($) => {
-    var a = $('.jssdk').text();
-    console.log($('#mobage-game-container').attr('class'));
-    console.log(a);
+    console.log($('#wrapper').find('div').length);
+    console.log($('#wrapper').find('.contents').length);
+    $('div.contents','#wrapper').each(function(){
+        console.log($(this).find('div').find('span').length);
+        
+});
 })
 .catch((err) => {
     console.log(err);
