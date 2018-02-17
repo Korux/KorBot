@@ -367,34 +367,66 @@ bot.on('message',(message) => {
         message.reply("I choose " + "**" + options[pick].trim() + "**");
     }
 
-    if(message.content.substr(0,9) == '!buttblow' || message.content.substr(0,7) == '!banana' || message.content.substr(0,5) == '!poke' || message.content.substr(0,5) == '!slam'){
+    if(message.content.substr(0,9) == '!buttblow' || message.content.substr(0,7) == '!banana' || message.content.substr(0,5) == '!poke' || message.content.substr(0,5) == '!slam'|| message.content.substr(0,7) == '!suplex'){
 
         var url = message.mentions.users.first().displayAvatarURL;
         var originalFile;
-        var avatarFile = './action_images/avatar.png';;
         var outputFile;
+        var avatarFile = './action_images/avatar.png';
         var width,height,x,y;
+        var avatarOptions;
 
         if(message.content.substr(0,9) == '!buttblow'){
-            originalFile = './action_images/buttblow.png';
-            outputFile = './action_images/buttblow_out.png'; 
-            width = 80;height = 80;
-            x = 305; y = 185; 
+            avatarOptions = {
+                width : 80,
+                height : 80,
+                x : 305,
+                y : 185,
+                flipped : false,
+                originalFile : './action_images/buttblow.png',
+                outputFile : './action_images/buttblow_out.png'
+            };
         }else if(message.content.substr(0,7) == '!banana'){
-            originalFile = './action_images/banana.png';
-            outputFile = './action_images/banana_out.png';
-            width = 60;height = 60;
-            x = 241; y = 172; 
+            avatarOptions = {
+                width : 60,
+                height : 60,
+                x : 241,
+                y : 172,
+                flipped : false,
+                originalFile : './action_images/banana.png',
+                outputFile : './action_images/banana_out.png'
+            };
         }else if(message.content.substr(0,5) == '!poke'){
-            originalFile = './action_images/poke.png';
-            outputFile = './action_images/poke_out.png';
-            width = 70;height = 70;
-            x = 335; y = 160; 
+            avatarOptions = {
+                width : 70,
+                height : 70,
+                x : 335,
+                y : 160,
+                flipped : false,
+                originalFile : './action_images/poke.png',
+                outputFile : './action_images/poke_out.png'
+            };
         }else if(message.content.substr(0,5) == '!slam'){
-            originalFile = './action_images/slam.png';
-            outputFile = './action_images/slam_out.png';
-            width = 80;height = 80;
-            x = 95; y = 210; 
+            
+            avatarOptions = {
+                width : 80,
+                height : 80,
+                x : 95,
+                y : 210,
+                flipped : false,
+                originalFile : './action_images/slam.png',
+                outputFile : './action_images/slam_out.png'
+            };
+        }else if (message.content.substr(0,7) == '!suplex'){
+            avatarOptions = {
+                width : 75,
+                height : 75,
+                x : 45,
+                y : 135,
+                flipped : true,
+                originalFile : './action_images/suplex.png',
+                outputFile : './action_images/suplex_out.png'
+            };
         }
 
         if(url != null){
@@ -402,15 +434,16 @@ bot.on('message',(message) => {
             var trueURL = url.substr(0,obj+4);
             jimp.read(trueURL)
             .then(function (image) {
-                image.resize(width, height,jimp.RESIZE_BILINEAR)                               
+                image.resize(avatarOptions.width, avatarOptions.height,jimp.RESIZE_BILINEAR) 
+                .flip(false,avatarOptions.flipped)                              
                 .write(avatarFile,function(){
                     jimp.read(avatarFile)
                     .then(function (image){
-                        jimp.read(originalFile)
+                        jimp.read(avatarOptions.originalFile)
                         .then(function(actionImg){
-                            actionImg.composite(image,x,y)
-                            .write(outputFile,function(){
-                                message.channel.send({file:outputFile}).catch(console.error());
+                            actionImg.composite(image,avatarOptions.x,avatarOptions.y)
+                            .write(avatarOptions.outputFile,function(){
+                                message.channel.send({file:avatarOptions.outputFile}).catch(console.error());
                             });  
                         });
                     });
