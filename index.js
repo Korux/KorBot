@@ -370,10 +370,7 @@ bot.on('message',(message) => {
     if(message.content.substr(0,9) == '!buttblow' || message.content.substr(0,7) == '!banana' || message.content.substr(0,5) == '!poke' || message.content.substr(0,5) == '!slam'|| message.content.substr(0,7) == '!suplex'){
 
         var url = message.mentions.users.first().displayAvatarURL;
-        var originalFile;
-        var outputFile;
         var avatarFile = './action_images/avatar.png';
-        var width,height,x,y;
         var avatarOptions;
 
         if(message.content.substr(0,9) == '!buttblow'){
