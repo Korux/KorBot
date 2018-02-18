@@ -368,11 +368,11 @@ bot.on('message',(message) => {
 
         if(message.content.substr(0,9) == '!buttblow'){
             avatarOptions = {
-                width : 80,
-                height : 80,
-                x : 305,
-                y : 185,
-                flipped : false,
+                width : 85,
+                height : 85,
+                x : 300,
+                y : 180,
+                rotate : 20,
                 originalFile : './action_images/img_in/buttblow.png',
                 outputFile : './action_images/img_out/buttblow_out.png'
             };
@@ -382,38 +382,38 @@ bot.on('message',(message) => {
                 height : 60,
                 x : 241,
                 y : 172,
-                flipped : false,
+                rotate : 0,
                 originalFile : './action_images/img_in/banana.png',
                 outputFile : './action_images/img_out/banana_out.png'
             };
         }else if(message.content.substr(0,5) == '!poke'){
             avatarOptions = {
-                width : 70,
-                height : 70,
+                width : 75,
+                height : 75,
                 x : 335,
-                y : 160,
-                flipped : false,
+                y : 165,
+                rotate : 12,
                 originalFile : './action_images/img_in/poke.png',
                 outputFile : './action_images/img_out/poke_out.png'
             };
         }else if(message.content.substr(0,5) == '!slam'){
             
             avatarOptions = {
-                width : 80,
-                height : 80,
-                x : 95,
-                y : 210,
-                flipped : false,
+                width : 100,
+                height : 100,
+                x : 80,
+                y : 190,
+                rotate : -35,
                 originalFile : './action_images/img_in/slam.png',
                 outputFile : './action_images/img_out/slam_out.png'
             };
         }else if (message.content.substr(0,7) == '!suplex'){
             avatarOptions = {
-                width : 75,
-                height : 75,
-                x : 45,
-                y : 135,
-                flipped : true,
+                width : 90,
+                height : 90,
+                x : 40,
+                y : 120,
+                rotate : -160,
                 originalFile : './action_images/img_in/suplex.png',
                 outputFile : './action_images/img_out/suplex_out.png'
             };
@@ -424,8 +424,11 @@ bot.on('message',(message) => {
             var trueURL = url.substr(0,obj+4);
             jimp.read(trueURL)
             .then(function (image) {
-                image.resize(avatarOptions.width, avatarOptions.height,jimp.RESIZE_BILINEAR) 
-                .flip(false,avatarOptions.flipped)                              
+                image
+                .scale(2)
+                .rotate(avatarOptions.rotate)
+                .scale(0.5)
+                .resize(avatarOptions.width, avatarOptions.height,jimp.RESIZE_BILINEAR)                           
                 .write(avatarFile,function(){
                     jimp.read(avatarFile)
                     .then(function (image){
