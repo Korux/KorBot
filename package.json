@@ -1,15 +1,13 @@
 {
   "name": "unicorn_bot",
-  "version": "1.0.0",
   "description": "Granblue Fantasy Emote Bot",
-  "main": "index.js",
+  "version": "0.0.0",
+  "main": "bot.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node bot.js"
   },
-  "author": "Korux",
-  "license": "ISC",
   "dependencies": {
-    "discord.js": "^11.3.0",
-    "jimp": "^0.2.28"
+    "discord.js": "11.3.0",
+    "jimp": "0.2.28"
   }
 }
