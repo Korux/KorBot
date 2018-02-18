@@ -13,7 +13,7 @@ var rolesInfo = JSON.parse(rawDataRoles);
 
 var botSpamControl = [];
 
-//bot.login(botToken.token);
+bot.login(botToken.token);
 
 bot.on('ready',(ready) => {
     bot.user.setActivity("Azur Lane");
@@ -495,5 +495,3 @@ bot.on('message',(message) => {
             });
         }
 });
-
-bot.login(process.env.BOT_TOKEN);
