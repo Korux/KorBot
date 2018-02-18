@@ -363,7 +363,7 @@ bot.on('message',(message) => {
     if(message.content.substr(0,9) == '!buttblow' || message.content.substr(0,7) == '!banana' || message.content.substr(0,5) == '!poke' || message.content.substr(0,5) == '!slam'|| message.content.substr(0,7) == '!suplex'){
 
         var url = message.mentions.users.first().displayAvatarURL;
-        var avatarFile = './action_images/avatar.png';
+        var avatarFile = './action_images/img_out/avatar.png';
         var avatarOptions;
 
         if(message.content.substr(0,9) == '!buttblow'){
@@ -373,8 +373,8 @@ bot.on('message',(message) => {
                 x : 305,
                 y : 185,
                 flipped : false,
-                originalFile : './action_images/buttblow.png',
-                outputFile : './action_images/buttblow_out.png'
+                originalFile : './action_images/img_in/buttblow.png',
+                outputFile : './action_images/img_out/buttblow_out.png'
             };
         }else if(message.content.substr(0,7) == '!banana'){
             avatarOptions = {
@@ -383,8 +383,8 @@ bot.on('message',(message) => {
                 x : 241,
                 y : 172,
                 flipped : false,
-                originalFile : './action_images/banana.png',
-                outputFile : './action_images/banana_out.png'
+                originalFile : './action_images/img_in/banana.png',
+                outputFile : './action_images/img_out/banana_out.png'
             };
         }else if(message.content.substr(0,5) == '!poke'){
             avatarOptions = {
@@ -393,8 +393,8 @@ bot.on('message',(message) => {
                 x : 335,
                 y : 160,
                 flipped : false,
-                originalFile : './action_images/poke.png',
-                outputFile : './action_images/poke_out.png'
+                originalFile : './action_images/img_in/poke.png',
+                outputFile : './action_images/img_out/poke_out.png'
             };
         }else if(message.content.substr(0,5) == '!slam'){
             
@@ -404,8 +404,8 @@ bot.on('message',(message) => {
                 x : 95,
                 y : 210,
                 flipped : false,
-                originalFile : './action_images/slam.png',
-                outputFile : './action_images/slam_out.png'
+                originalFile : './action_images/img_in/slam.png',
+                outputFile : './action_images/img_out/slam_out.png'
             };
         }else if (message.content.substr(0,7) == '!suplex'){
             avatarOptions = {
@@ -414,8 +414,8 @@ bot.on('message',(message) => {
                 x : 45,
                 y : 135,
                 flipped : true,
-                originalFile : './action_images/suplex.png',
-                outputFile : './action_images/suplex_out.png'
+                originalFile : './action_images/img_in/suplex.png',
+                outputFile : './action_images/img_out/suplex_out.png'
             };
         }
 
@@ -447,8 +447,8 @@ bot.on('message',(message) => {
 
 
     if(message.content.substr(0,5) == "!slap"){
-        var outputFile = "./action_images/slap_out.png";
-        var originalFile = "./action_images/slap.png";
+        var outputFile = "./action_images/img_out/slap_out.png";
+        var originalFile = "./action_images/img_in/slap.png";
         var imageCaption;
         if(message.mentions.users.array().length == 0){
             imageCaption = message.content.substr(6);
