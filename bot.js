@@ -81,15 +81,6 @@ bot.on('message',(message) => {
         
     }
 
-    if(message.content == "!readjsonroles"){
-        var output = '```\n';
-        rolesInfo.allRoles.forEach(function(role){
-            output = output + role.name + '\n';
-        });
-        output += '```';
-        message.channel.send(output);
-    }
-
     if(message.content.substr(0,9) == "!addrole " || message.content.substr(0,12) == "!removerole "){ 
         var commandType = message.content.split(" ")[0]; 
         var roleStr;
@@ -181,10 +172,15 @@ bot.on('message',(message) => {
     if(message.content == "!listroles"){
         var currRoles ='The Current Roles I Have Access to Are: ```\n';
         rolesInfo.allRoles.forEach(function(currRole){
-            var thisRole = message.guild.roles.find('name',currRole.name).editable;
-                if(thisRole){
-                    currRoles = currRoles + currRole.name + '\n';
-                }
+            var thisRole;
+            try{
+                thisRole = message.guild.roles.find('name',currRole.name).editable;
+            }catch(error){
+                thisRole = false;
+            }
+            if(thisRole){
+                currRoles = currRoles + currRole.name + '\n';
+            }
         });
         currRoles += '```';
         message.channel.send(currRoles);
