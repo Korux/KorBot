@@ -13,7 +13,7 @@ var rolesInfo = JSON.parse(rawDataRoles);
 
 var botSpamControl = [];
 
-bot.login(botToken.token);
+//bot.login(botToken.token);
 bot.login(process.env.BOT_TOKEN);
 
 bot.on('ready',(ready) => {
