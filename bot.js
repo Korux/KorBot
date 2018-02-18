@@ -172,14 +172,11 @@ bot.on('message',(message) => {
     if(message.content == "!listroles"){
         var currRoles ='The Current Roles I Have Access to Are: ```\n';
         rolesInfo.allRoles.forEach(function(currRole){
-            var thisRole;
-            try{
-                thisRole = message.guild.roles.find('name',currRole.name).editable;
-            }catch(error){
-                thisRole = false;
-            }
-            if(thisRole){
-                currRoles = currRoles + currRole.name + '\n';
+            var thisRole = message.guild.roles.find('name',currRole.name);
+            if (thisRole != null){
+                if(thisRole.editable){
+                    currRoles = currRoles + currRole.name + '\n';
+                }
             }
         });
         currRoles += '```';
