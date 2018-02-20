@@ -540,13 +540,13 @@ bot.on('message',(message) => {
                 message.channel.send('Found ' + (possibleGuilds.length + possibleSeeds.length) + ' possible guilds, posting top 3 \n\n');
                 var numPosted = 0;
                 for(var i = 0; i < possibleSeeds.length;i++){
-                    if(numPosted <= 3){
+                    if(numPosted < 3){
                         message.channel.send(getOutput(possibleSeeds,i,'seeded') + '\n\n');
                         numPosted++;
                     }
                 }
                 for(var i = 0; i < possibleGuilds.length;i++){
-                    if(numPosted <= 3){
+                    if(numPosted < 3){
                         message.channel.send(getOutput(possibleGuilds,i,'normal') + '\n\n');
                         numPosted++;
                     }
