@@ -7,9 +7,16 @@ const rawData = fs.readFileSync('./json/botinfo.json');
 var rawDataRoles = fs.readFileSync('./json/roles.json');
 const botToken = require('./json/bottoken.json');
 
+const rawDataGuild = fs.readFileSync('./json/guildinfo.json');
+const rawDataSeeded = fs.readFileSync('./json/seededinfo.json');
+const rawDataIndiv = fs.readFileSync('./json/individualinfo.json');
+
 const bot = new Discord.Client();
 const botInfo = JSON.parse(rawData);
 var rolesInfo = JSON.parse(rawDataRoles);
+const guildInfo = JSON.parse(rawDataGuild);
+const seedInfo = JSON.parse(rawDataSeeded);
+const indivInfo = JSON.parse(rawDataIndiv);
 
 var botSpamControl = [];
 
@@ -51,7 +58,7 @@ bot.on('message',(message) => {
 
             if(botSpamControl[i].time > now - 1000){
                 match++;
-                if(match >= 3){
+                if(match >= 6){
                     emitSpamError();
                 }
             } else if (botSpamControl[i].time < now - 1000){
@@ -489,5 +496,115 @@ bot.on('message',(message) => {
             .catch(function (err) {
                 console.error(err);
             });
+        }
+
+        if(message.content.substr(0,3) == '!gw'){
+            var possibleGuilds = [];
+            var possibleSeeds = [];
+            var guildName = message.content.substr(4);
+            const numberWithCommas = (x) => {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            } 
+            const getOutput = (guild,i,type) => {
+                return 'http://game.granbluefantasy.jp/#guild/detail/' + guild[i].id + '\n'+'-----------------\n'+'```css\n'+'GUILD - ' + guild[i].name + '\n\n'
+                + 'TYPE - ' + type + '\n\n'+ 'ID - ' + guild[i].id + '\n\n'+'PRELIM RANKING - ' + guild[i].rank + '\n\n'+'PRELIM HONOR - ' 
+                + numberWithCommas(guild[i].honor) + '```';
+            }
+            guildInfo.forEach(function(guild){
+                if(guild.name == guildName){
+                    possibleGuilds.push(guild);
+                }
+            });
+            seedInfo.forEach(function(seed){
+                if(seed.name == guildName){
+                    possibleSeeds.push(seed);
+                }
+            });
+            if(possibleGuilds.length + possibleSeeds.length == 0){
+                message.channel.send('Could not find crew. This may be an unranked crew or you dont know how to spell/capitalize.');
+            } else if (possibleGuilds.length + possibleSeeds.length == 1){
+                if(possibleGuilds.length == 1){
+                    message.channel.send(getOutput(possibleGuilds,0,'normal'));
+                }else{
+                    message.channel.send(getOutput(possibleSeeds,0,'seeded'));
+                }     
+            }else if (possibleGuilds.length + possibleSeeds.length <=3){
+                message.channel.send('Found ' + (possibleGuilds.length + possibleSeeds.length) + ' possible guilds \n\n');
+                for(var i = 0; i < possibleGuilds.length;i++){
+                    message.channel.send(getOutput(possibleGuilds,i,'normal') + '\n\n');
+                }
+                for(var i = 0; i < possibleSeeds.length;i++){
+                    message.channel.send(getOutput(possibleSeeds,i,'seeded') + '\n\n');
+                }
+            }else{
+                message.channel.send('Found ' + (possibleGuilds.length + possibleSeeds.length) + ' possible guilds, posting top 3 \n\n');
+                var numPosted = 0;
+                for(var i = 0; i < possibleSeeds.length;i++){
+                    if(numPosted <= 3){
+                        message.channel.send(getOutput(possibleSeeds,i,'seeded') + '\n\n');
+                        numPosted++;
+                    }
+                }
+                for(var i = 0; i < possibleGuilds.length;i++){
+                    if(numPosted <= 3){
+                        message.channel.send(getOutput(possibleGuilds,i,'normal') + '\n\n');
+                        numPosted++;
+                    }
+                }   
+            }
+        }
+
+        if(message.content.substr(0,12) == '!player_name'){
+            var name = message.content.substr(13);
+            var possibleNames = [];
+            const numberWithCommas = (x) => {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            } 
+            const getOutput = (name,i) => {
+                return 'http://game.granbluefantasy.jp/#profile/' + name[i].id + '\n'+'-----------------\n'+'```css\n'+'NAME - ' + name[i].name + '\n\n'
+                + 'RANK - ' + name[i].rank + '\n\n'+ 'ID - ' + name[i].id + '\n\n'+'BATTLES - ' + name[i].battles + '\n\n'+'HONOR - ' 
+                + numberWithCommas(name[i].honor) + '```';
+            }
+            indivInfo.forEach(function(ind){
+                if(ind.name == name){
+                    possibleNames.push(ind);
+                }
+            });
+
+            if(possibleNames.length == 0){
+                message.channel.send('Could not find player. This may be out of the top 80k or you dont know how to spell/capitalize.');
+            } else if (possibleNames.length == 1){
+                    message.channel.send(getOutput(possibleNames,0));
+            }else if (possibleNames.length <=3){
+                message.channel.send('Found ' + possibleNames.length + ' possible players \n\n');
+                for(var i = 0; i < possibleNames.length;i++){
+                    message.channel.send(getOutput(possibleNames,0) + '\n\n');
+                }  
+            }else{
+                message.channel.send('Found ' + possibleNames.length + ' possible players, posting top 3 \n\n');
+                for(var i = 0; i < 3;i++){
+                    message.channel.send(getOutput(possibleNames,0) + '\n\n');
+                }
+            }
+        }
+
+        if(message.content.substr(0,10) == '!player_id'){
+            var id = message.content.substr(11);
+            const numberWithCommas = (x) => {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            } 
+            const getOutput = (name) => {
+                return 'http://game.granbluefantasy.jp/#profile/' + name.id + '\n'+'-----------------\n'+'```css\n'+'NAME - ' + name.name + '\n\n'
+                + 'RANK - ' + name.rank + '\n\n'+ 'ID - ' + name.id + '\n\n'+'BATTLES - ' + name.battles + '\n\n'+'HONOR - ' 
+                + numberWithCommas(name.honor) + '```';
+            }
+            var found = false;
+            indivInfo.forEach(function(ind){
+                if(ind.id == id){
+                    message.channel.send(getOutput(ind));
+                    found = true;
+                }
+            });
+            if(!found) message.channel.send("Could not Find ID. Invalid ID or this person is not in the top 80k");
         }
 });
