@@ -572,7 +572,7 @@ bot.on('message',(message) => {
             });
 
             if(possibleNames.length == 0){
-                message.channel.send('Could not find player. This may be out of the top 80k or you dont know how to spell/capitalize.');
+                message.channel.send('Could not find player. This player may not be in the top 80k or you dont know how to spell/capitalize.');
             } else if (possibleNames.length == 1){
                     message.channel.send(getOutput(possibleNames,0));
             }else if (possibleNames.length <=3){
@@ -605,6 +605,6 @@ bot.on('message',(message) => {
                     found = true;
                 }
             });
-            if(!found) message.channel.send("Could not Find ID. Invalid ID or this person is not in the top 80k");
+            if(!found) message.channel.send("Could not Find ID. Invalid ID or this player is not in the top 80k");
         }
 });
