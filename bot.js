@@ -578,12 +578,12 @@ bot.on('message',(message) => {
             }else if (possibleNames.length <=3){
                 message.channel.send('Found ' + possibleNames.length + ' possible players \n\n');
                 for(var i = 0; i < possibleNames.length;i++){
-                    message.channel.send(getOutput(possibleNames,0) + '\n\n');
+                    message.channel.send(getOutput(possibleNames,i) + '\n\n');
                 }  
             }else{
                 message.channel.send('Found ' + possibleNames.length + ' possible players, posting top 3 \n\n');
                 for(var i = 0; i < 3;i++){
-                    message.channel.send(getOutput(possibleNames,0) + '\n\n');
+                    message.channel.send(getOutput(possibleNames,i) + '\n\n');
                 }
             }
         }
