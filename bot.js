@@ -1,6 +1,8 @@
 const jimp = require('jimp');
 const Discord = require('discord.js');
 const fs = require('fs');
+const gm = require('gm');
+const im = require('gm').subClass({imageMagick:true});
 
 const botDetails = require('./package.json');
 const rawData = fs.readFileSync('./json/botinfo.json');
@@ -459,16 +461,28 @@ bot.on('message',(message) => {
     }
 
 
-    if(message.content.substr(0,5) == "!slap"){
-        var outputFile = "./action_images/img_out/slap_out.png";
-        var originalFile = "./action_images/img_in/slap.png";
+    if(message.content.substr(0,5) == "!slap" || message.content.substr(0,11) == "!tiamattest"){
+        var originalFile;
+        var outputFile;
         var imageCaption;
-        if(message.mentions.users.array().length == 0){
-            imageCaption = message.content.substr(6);
-        } else {
-            imageCaption = message.mentions.users.first().username;
-        }
+        var type;
 
+        if(message.content.substr(0,5) == "!slap"){
+            var originalFile = "./action_images/img_in/slap.png";
+            var outputFile = "./action_images/img_out/slap_out.png";
+            if(message.mentions.users.array().length == 0){
+                imageCaption = message.content.substr(6);
+            } else {
+                imageCaption = message.mentions.users.first().username;
+            }
+            type = "slap";
+        }else if (message.content.substr(0,11) == "!tiamattest"){
+            var originalFile = "./action_images/img_in/tiamat.png";
+            var outputFile = "./action_images/img_out/tiamat_out.png";
+            imageCaption = message.content.substr(12);
+            type = "tiamat";
+        }
+        
         var loadedImage;
 
         function measureText(font, text) {
@@ -482,19 +496,20 @@ bot.on('message',(message) => {
             }
             return x;
         };
-
         
         jimp.read(originalFile)
             .then(function (image) {
                 loadedImage = image;
-                return jimp.loadFont(jimp.FONT_SANS_16_BLACK);
+                return jimp.loadFont(jimp.FONT_SANS_16_BLACK);   
             })
             .then(function (font) {
-                var xOffset = measureText(font, imageCaption);
-                loadedImage.print(font, 168-(xOffset/2), 230, imageCaption)
-                .write(outputFile,function(){
-                    message.channel.send({file:outputFile}).catch(console.error);
-                });
+                if(type == "slap"){
+                    var xOffset = measureText(font, imageCaption);
+                    loadedImage.print(font, 168-(xOffset/2), 230, imageCaption)
+                    .write(outputFile,function(){
+                        message.channel.send({file:outputFile}).catch(console.error);
+                    });
+                }   
             })
             .catch(function (err) {
                 console.error(err);
