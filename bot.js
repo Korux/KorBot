@@ -192,8 +192,11 @@ bot.on('message',(message) => {
 
     if(message.content.substr(0,5) == "!emo "){
         var emoteStr = message.content.substr(5);
+        var addStr = "./images/additional_images/" + emoteStr + ".png";
         emoteStr = "./images/" + emoteStr + ".png";
-        message.channel.send({file:emoteStr}).catch(console.error);
+        message.channel.send({file:emoteStr}).catch(function(){
+            message.channel.send({file:addStr}).catch(console.error);
+        });
     }
 
     if(message.content == "!commands"){
