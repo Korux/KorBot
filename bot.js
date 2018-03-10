@@ -67,10 +67,6 @@ bot.on('message',(message) => {
         }
     }
 
-    if(message.content == "!test1"){
-       
-    }
-
     if(message.content == "!updateroles"){
         var newRoles = {allRoles : []};
         var roles = message.guild.roles;
