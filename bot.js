@@ -1,8 +1,6 @@
 const jimp = require('jimp');
 const Discord = require('discord.js');
 const fs = require('fs');
-const gm = require('gm');
-const im = require('gm').subClass({imageMagick:true});
 
 const botDetails = require('./package.json');
 const rawData = fs.readFileSync('./json/botinfo.json');
@@ -67,6 +65,10 @@ bot.on('message',(message) => {
                 botSpamControl = [];
             }
         }
+    }
+
+    if(message.content == "!test1"){
+       
     }
 
     if(message.content == "!updateroles"){
