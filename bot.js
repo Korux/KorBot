@@ -18,6 +18,8 @@ const guildInfo = JSON.parse(rawDataGuild);
 const seedInfo = JSON.parse(rawDataSeeded);
 const indivInfo = JSON.parse(rawDataIndiv);
 
+const rolesJS = require('./js/roles.js');
+
 var botSpamControl = [];
 
 bot.login(botToken.token);
@@ -68,76 +70,34 @@ bot.on('message',(message) => {
     }
 
     if(message.content == "!updateroles"){
-        var newRoles = {allRoles : []};
-        var roles = message.guild.roles;
-        message.channel.send("Roles Updated! the roles Are:\n");
-        var output = '```\n';
-        roles.forEach(function(role){
-            output = output + role.name + '\n';
-            newRoles.allRoles.push({name : role.name});
-        });
-        json = JSON.stringify(newRoles);
-        fs.writeFile('./json/roles.json', json, 'utf8',function(){
+        ret = rolesJS.updateRoles(message);
+        fs.writeFile('./json/roles.json', ret[0], 'utf8',function(){
             rawDataRoles = fs.readFileSync("./json/roles.json");
             rolesInfo = JSON.parse(rawDataRoles);
-            output += '```';
-            message.channel.send(output);
- 
-            
-        });
-        
+            message.channel.send({embed: {
+                color: 3447003,
+                author: {
+                  name: "Updated Roles",
+                  icon_url: bot.user.avatarURL
+                },
+                fields: [{
+                    name: "Granted",
+                    value: ret[1]
+                  },
+                  {
+                    name: "Denied",
+                    value: ret[2]
+                  }
+                ],
+                timestamp: new Date(),
+              }
+            });
+        }); 
     }
 
     if(message.content.substr(0,9) == "!addrole " || message.content.substr(0,12) == "!removerole "){ 
-        var commandType = message.content.split(" ")[0]; 
-        var roleStr;
-        if(commandType == '!addrole'){
-            roleStr = message.content.substr(9);
-        } else {
-            roleStr = message.content.substr(12);
-        }
-        roleStr = roleStr.trim();
- 
-        var role = "";
-        rolesInfo.allRoles.forEach(function(currRole){
-            if(roleStr.toLowerCase() == currRole.name.toLowerCase()){
-                role = message.guild.roles.find("name", currRole.name);
-            }
-        });
-
-        if(role == ""){
-            message.reply("No such role exists");
-        } else {
-            if(commandType == "!addrole"){
-                if(message.member.roles.has(role.id)){
-                    message.reply("You already have this role");
-                } else{
-                    if(role.name == 'Bots'){
-                        message.reply("Wait a minute... you're not a bot!");
-                    }else{
-                        message.member.addRole(role).then(function(){
-                            message.reply("You joined " + role.name);
-                        }).catch(function(){
-                            message.reply("I do not have permission to modify this role");
-                        });
-                    }
-                    
-                } 
-                
-            } else if (commandType == "!removerole"){
-                if(!message.member.roles.has(role.id)){
-                    message.reply("You do not have this role");
-                } else{
-                    message.member.removeRole(role).then(function(){
-                        message.reply("You left " + role.name);
-                    }).catch(function(){
-                        message.reply("I do not have permission to modify this role");
-                    });
-                } 
-            }
-        }
-        
-    } 
+        rolesJS.addRemoveRole(message,message.content.split(" ")[0],rolesInfo);
+    }
 
     if(message.content.substr(0,10) == "!triggers "){
         var boss = message.content.substr(10);
@@ -177,17 +137,7 @@ bot.on('message',(message) => {
     }
 
     if(message.content == "!listroles"){
-        var currRoles ='The Current Roles I Have Access to Are: ```\n';
-        rolesInfo.allRoles.forEach(function(currRole){
-            var thisRole = message.guild.roles.find('name',currRole.name);
-            if (thisRole != null){
-                if(thisRole.editable){
-                    currRoles = currRoles + currRole.name + '\n';
-                }
-            }
-        });
-        currRoles += '```';
-        message.channel.send(currRoles);
+        rolesJS.listRoles(message,rolesInfo);
     }
 
     if(message.content.substr(0,5) == "!emo "){
