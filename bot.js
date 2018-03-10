@@ -18,7 +18,8 @@ const guildInfo = JSON.parse(rawDataGuild);
 const seedInfo = JSON.parse(rawDataSeeded);
 const indivInfo = JSON.parse(rawDataIndiv);
 
-const rolesJS = require('./js/roles.js');
+const rolesJS = require('./roles.js');
+const emotesJS = require('./emotes.js');
 
 var botSpamControl = [];
 
@@ -69,35 +70,21 @@ bot.on('message',(message) => {
         }
     }
 
+//----------------------------------------------------------------------------------------------------------
+
     if(message.content == "!updateroles"){
-        ret = rolesJS.updateRoles(message);
-        fs.writeFile('./json/roles.json', ret[0], 'utf8',function(){
-            rawDataRoles = fs.readFileSync("./json/roles.json");
-            rolesInfo = JSON.parse(rawDataRoles);
-            message.channel.send({embed: {
-                color: 3447003,
-                author: {
-                  name: "Updated Roles",
-                  icon_url: bot.user.avatarURL
-                },
-                fields: [{
-                    name: "Granted",
-                    value: ret[1]
-                  },
-                  {
-                    name: "Denied",
-                    value: ret[2]
-                  }
-                ],
-                timestamp: new Date(),
-              }
-            });
-        }); 
+        rolesJS.updateRoles(message,fs,bot);
     }
 
     if(message.content.substr(0,9) == "!addrole " || message.content.substr(0,12) == "!removerole "){ 
         rolesJS.addRemoveRole(message,message.content.split(" ")[0],rolesInfo);
     }
+
+    if(message.content == "!listroles"){
+        rolesJS.listRoles(message,rolesInfo);
+    }
+
+//------------------------------------------------------------------------------------------------------------------
 
     if(message.content.substr(0,10) == "!triggers "){
         var boss = message.content.substr(10);
@@ -134,10 +121,6 @@ bot.on('message',(message) => {
         }
         currTriggers += '```';
         message.channel.send(currTriggers);
-    }
-
-    if(message.content == "!listroles"){
-        rolesJS.listRoles(message,rolesInfo);
     }
 
     if(message.content.substr(0,5) == "!emo "){
@@ -320,94 +303,21 @@ bot.on('message',(message) => {
         message.reply("I choose " + "**" + options[pick].trim() + "**");
     }
 
-    if(message.content.substr(0,9) == '!buttblow' || message.content.substr(0,7) == '!banana' || message.content.substr(0,5) == '!poke' || message.content.substr(0,5) == '!slam'|| message.content.substr(0,7) == '!suplex'){
-
-        var url = message.mentions.users.first().displayAvatarURL;
-        var avatarFile = './action_images/img_out/avatar.png';
-        var avatarOptions;
-
-        if(message.content.substr(0,9) == '!buttblow'){
-            avatarOptions = {
-                width : 85,
-                height : 85,
-                x : 300,
-                y : 180,
-                rotate : 20,
-                originalFile : './action_images/img_in/buttblow.png',
-                outputFile : './action_images/img_out/buttblow_out.png'
-            };
-        }else if(message.content.substr(0,7) == '!banana'){
-            avatarOptions = {
-                width : 60,
-                height : 60,
-                x : 241,
-                y : 172,
-                rotate : 0,
-                originalFile : './action_images/img_in/banana.png',
-                outputFile : './action_images/img_out/banana_out.png'
-            };
-        }else if(message.content.substr(0,5) == '!poke'){
-            avatarOptions = {
-                width : 75,
-                height : 75,
-                x : 335,
-                y : 165,
-                rotate : 12,
-                originalFile : './action_images/img_in/poke.png',
-                outputFile : './action_images/img_out/poke_out.png'
-            };
-        }else if(message.content.substr(0,5) == '!slam'){
-            
-            avatarOptions = {
-                width : 100,
-                height : 100,
-                x : 80,
-                y : 190,
-                rotate : -35,
-                originalFile : './action_images/img_in/slam.png',
-                outputFile : './action_images/img_out/slam_out.png'
-            };
-        }else if (message.content.substr(0,7) == '!suplex'){
-            avatarOptions = {
-                width : 90,
-                height : 90,
-                x : 40,
-                y : 120,
-                rotate : -160,
-                originalFile : './action_images/img_in/suplex.png',
-                outputFile : './action_images/img_out/suplex_out.png'
-            };
-        }
-
-        if(url != null){
-            var obj = url.indexOf('.png');
-            var trueURL = url.substr(0,obj+4);
-            jimp.read(trueURL)
-            .then(function (image) {
-                image
-                .scale(2)
-                .rotate(avatarOptions.rotate)
-                .scale(0.5)
-                .resize(avatarOptions.width, avatarOptions.height,jimp.RESIZE_BILINEAR)                           
-                .write(avatarFile,function(){
-                    jimp.read(avatarFile)
-                    .then(function (image){
-                        jimp.read(avatarOptions.originalFile)
-                        .then(function(actionImg){
-                            actionImg.composite(image,avatarOptions.x,avatarOptions.y)
-                            .write(avatarOptions.outputFile,function(){
-                                message.channel.send({file:avatarOptions.outputFile}).catch(console.error());
-                            });  
-                        });
-                    });
-                });
-
-            }).catch(function(err){
-                console.error(err);
-            });
-        }
+    if(message.content.substr(0,9) == '!buttblow'){
+        emotesJS.actionImage(message,"!buttblow",jimp);
     }
-
+    if(message.content.substr(0,7) == '!banana'){
+        emotesJS.actionImage(message,"!banana",jimp);
+    }
+    if(message.content.substr(0,5) == '!poke'){
+        emotesJS.actionImage(message,"!poke",jimp);
+    }
+    if(message.content.substr(0,5) == '!slam'){
+        emotesJS.actionImage(message,"!slam",jimp);
+    }
+    if(message.content.substr(0,7) == '!suplex'){
+        emotesJS.actionImage(message,"!suplex",jimp);
+    }
 
     if(message.content.substr(0,5) == "!slap" || message.content.substr(0,11) == "!tiamattest"){
         var originalFile;
