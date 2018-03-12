@@ -124,7 +124,7 @@ bot.on('message',(message) => {
     }
 
     if(message.content.substr(0,5) == "!emo "){
-        var emoteStr = message.content.substr(5);
+        var emoteStr = message.content.split(" ")[1];
         var addStr = "./images/additional_images/" + emoteStr + ".png";
         emoteStr = "./images/" + emoteStr + ".png";
         message.channel.send({file:emoteStr}).catch(function(){
