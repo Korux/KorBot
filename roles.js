@@ -1,47 +1,49 @@
 function updateRoles(message,fs,bot){
-    var newRoles = {guildRoles : []};
-    newRoles.guildRoles.push({channel : message.guild.name});
-    newRoles.guildRoles.push({granted : []});
-    newRoles.guildRoles.push({denied : []});
-    var roles = message.guild.roles;
-    var granted = "";
-    var denied = "";
-    roles.forEach(function(role){
-        if(role.name != '@everyone'){
-            if(role.editable == true){
-                newRoles.guildRoles[1].granted.push({name : role.name});
-                granted = granted  + role.name + '\n';
-            }else{
-                newRoles.guildRoles[2].denied.push({name : role.name});
-                denied = denied + role.name + '\n';
-            }
-        }     
-    });
-    json = JSON.stringify(newRoles);
-    fs.writeFile('./json/roles.json', json, 'utf8',function(){
-        rawDataRoles = fs.readFileSync("./json/roles.json");
-        rolesInfo = JSON.parse(rawDataRoles);
-        message.channel.send({embed: {
-            color: 3447003,
-            author: {
-              name: "Updated Roles",
-              icon_url: bot.user.avatarURL
-            },
-            fields: [{
-                name: "Granted",
-                value: granted,
-                inline:true
-              },
-              {
-                name: "Denied",
-                value: denied,
-                inline : true
-              }
-            ],
-            timestamp: new Date(),
-          }
+    return new Promise(function(resolve,reject){
+
+        var newRoles = {guildRoles : []};
+        newRoles.guildRoles.push({channel : message.guild.name});
+        newRoles.guildRoles.push({granted : []});
+        newRoles.guildRoles.push({denied : []});
+        var roles = message.guild.roles;
+        var granted = "";
+        var denied = "";
+        roles.forEach(function(role){
+            if(role.name != '@everyone'){
+                if(role.editable == true){
+                    newRoles.guildRoles[1].granted.push({name : role.name});
+                    granted = granted  + role.name + '\n';
+                }else{
+                    newRoles.guildRoles[2].denied.push({name : role.name});
+                    denied = denied + role.name + '\n';
+                }
+            }     
         });
-    }); 
+        json = JSON.stringify(newRoles);
+        fs.writeFile('./json/roles.json', json, 'utf8',function(){
+            message.channel.send({embed: {
+                color: 3447003,
+                author: {
+                name: "Updated Roles",
+                icon_url: bot.user.avatarURL
+                },
+                fields: [{
+                    name: "Granted",
+                    value: granted,
+                    inline:true
+                },
+                {
+                    name: "Denied",
+                    value: denied,
+                    inline : true
+                }
+                ],
+                timestamp: new Date(),
+            }
+            }).then(resolve());
+        });  
+    });
+    
 }
 
 function addRemoveRole(message,commandType,rolesInfo){ 
