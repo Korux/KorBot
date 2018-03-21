@@ -84,7 +84,7 @@ bot.on('message',(message) => {
     }
 
     if(message.content == "!listroles"){
-        rolesJS.listRoles(message,rolesInfo);
+        rolesJS.listRoles(message,rolesInfo,bot);
     }
 
 //------------------------------------------------------------------------------------------------------------------

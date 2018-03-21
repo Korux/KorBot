@@ -24,9 +24,10 @@ function updateRoles(message,fs,bot){
             message.channel.send({embed: {
                 color: 3447003,
                 author: {
-                name: "Updated Roles",
+                name: "Unicorn Bot",
                 icon_url: bot.user.avatarURL
                 },
+                title:"Updated Roles",
                 fields: [{
                     name: "Granted",
                     value: granted,
@@ -38,7 +39,7 @@ function updateRoles(message,fs,bot){
                     inline : true
                 }
                 ],
-                timestamp: new Date(),
+                timestamp: new Date()
             }
             }).then(resolve());
         });  
@@ -102,9 +103,9 @@ function addRemoveRole(message,commandType,rolesInfo){
 } 
 
 
-function listRoles(message,rolesInfo){
-    var currRoles ='The Current Roles I Have Access to Are: ```\n';
-    rolesInfo.allRoles.forEach(function(currRole){
+function listRoles(message,rolesInfo,bot){
+    var currRoles ="";
+    rolesInfo.guildRoles[1].granted.forEach(function(currRole){
         var thisRole = message.guild.roles.find('name',currRole.name);
         if (thisRole != null){
             if(thisRole.editable){
@@ -112,8 +113,16 @@ function listRoles(message,rolesInfo){
             }
         }
     });
-    currRoles += '```';
-    message.channel.send(currRoles);
+    message.channel.send({embed: {
+        color: 3447003,
+        author: {
+        name: "Unicorn",
+        icon_url: bot.user.avatarURL
+        },
+        title:"Current Roles",
+        description:currRoles
+        } 
+    });
 }
 
 module.exports = {
