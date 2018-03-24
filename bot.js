@@ -21,6 +21,7 @@ const indivInfo = JSON.parse(rawDataIndiv);
 const rolesJS = require('./roles.js');
 const emotesJS = require('./emotes.js');
 const guildWarJS = require('./guildwar.js');
+const otherJS = require('./other.js');
 
 var botSpamControl = [];
 
