@@ -20,6 +20,7 @@ const indivInfo = JSON.parse(rawDataIndiv);
 
 const rolesJS = require('./roles.js');
 const emotesJS = require('./emotes.js');
+const guildWarJS = require('./guildwar.js');
 
 var botSpamControl = [];
 
@@ -70,7 +71,7 @@ bot.on('message',(message) => {
         }
     }
 
-//----------------------------------------------------------------------------------------------------------
+// - ROLES - 
 
     if(message.content == "!updateroles"){
         rolesJS.updateRoles(message,fs,bot).then(function(){
@@ -87,7 +88,43 @@ bot.on('message',(message) => {
         rolesJS.listRoles(message,rolesInfo,bot);
     }
 
-//------------------------------------------------------------------------------------------------------------------
+// - EMOTES -
+
+    if(message.content.substr(0,5) == "!emo "){
+        emotesJS.emoteImage(message);
+    }
+    if(message.content.substr(0,9) == '!buttblow'){
+        emotesJS.actionImage(message,"!buttblow",jimp);
+    }
+    if(message.content.substr(0,7) == '!banana'){
+        emotesJS.actionImage(message,"!banana",jimp);
+    }
+    if(message.content.substr(0,5) == '!poke'){
+        emotesJS.actionImage(message,"!poke",jimp);
+    }
+    if(message.content.substr(0,5) == '!slam'){
+        emotesJS.actionImage(message,"!slam",jimp);
+    }
+    if(message.content.substr(0,7) == '!suplex'){
+        emotesJS.actionImage(message,"!suplex",jimp);
+    }
+    if(message.content.substr(0,5) == "!slap"){
+        emotesJS.slapImage(message,jimp);
+    }
+
+// - GUILD WAR - 
+
+    if(message.content.substr(0,3) == '!gw'){
+        guildWarJS.guildWar(message,guildInfo,seedInfo);
+    }
+    if(message.content.substr(0,12) == '!player_name'){
+        guildWarJS.playerName(message,indivInfo);
+    }
+    if(message.content.substr(0,10) == '!player_id'){
+        guildWarJS.playerID(message,indivInfo);
+    }
+
+// - OTHER -
 
     if(message.content.substr(0,10) == "!triggers "){
         var boss = message.content.substr(10);
@@ -124,15 +161,6 @@ bot.on('message',(message) => {
         }
         currTriggers += '```';
         message.channel.send(currTriggers);
-    }
-
-    if(message.content.substr(0,5) == "!emo "){
-        var emoteStr = message.content.split(" ")[1];
-        var addStr = "./images/additional_images/" + emoteStr + ".png";
-        emoteStr = "./images/" + emoteStr + ".png";
-        message.channel.send({file:emoteStr}).catch(function(){
-            message.channel.send({file:addStr}).catch(console.error);
-        });
     }
 
     if(message.content == "!commands"){
@@ -305,185 +333,4 @@ bot.on('message',(message) => {
         var pick = Math.floor(Math.random() * options.length);
         message.reply("I choose " + "**" + options[pick].trim() + "**");
     }
-
-    if(message.content.substr(0,9) == '!buttblow'){
-        emotesJS.actionImage(message,"!buttblow",jimp);
-    }
-    if(message.content.substr(0,7) == '!banana'){
-        emotesJS.actionImage(message,"!banana",jimp);
-    }
-    if(message.content.substr(0,5) == '!poke'){
-        emotesJS.actionImage(message,"!poke",jimp);
-    }
-    if(message.content.substr(0,5) == '!slam'){
-        emotesJS.actionImage(message,"!slam",jimp);
-    }
-    if(message.content.substr(0,7) == '!suplex'){
-        emotesJS.actionImage(message,"!suplex",jimp);
-    }
-
-    if(message.content.substr(0,5) == "!slap" || message.content.substr(0,11) == "!tiamattest"){
-        var originalFile;
-        var outputFile;
-        var imageCaption;
-        var type;
-
-        if(message.content.substr(0,5) == "!slap"){
-            var originalFile = "./action_images/img_in/slap.png";
-            var outputFile = "./action_images/img_out/slap_out.png";
-            if(message.mentions.users.array().length == 0){
-                imageCaption = message.content.substr(6);
-            } else {
-                imageCaption = message.mentions.users.first().username;
-            }
-            type = "slap";
-        }else if (message.content.substr(0,11) == "!tiamattest"){
-            var originalFile = "./action_images/img_in/tiamat.png";
-            var outputFile = "./action_images/img_out/tiamat_out.png";
-            imageCaption = message.content.substr(12);
-            type = "tiamat";
-        }
-        
-        var loadedImage;
-
-        function measureText(font, text) {
-            var x = 0;
-            for (var i = 0; i < text.length; i++) {
-                if (font.chars[text[i]]) {
-                    x += font.chars[text[i]].xoffset
-                        + (font.kernings[text[i]] && font.kernings[text[i]][text[i + 1]] ? font.kernings[text[i]][text[i + 1]] : 0)
-                        + (font.chars[text[i]].xadvance || 0);
-                }
-            }
-            return x;
-        };
-        
-        jimp.read(originalFile)
-            .then(function (image) {
-                loadedImage = image;
-                return jimp.loadFont(jimp.FONT_SANS_16_BLACK);   
-            })
-            .then(function (font) {
-                if(type == "slap"){
-                    var xOffset = measureText(font, imageCaption);
-                    loadedImage.print(font, 168-(xOffset/2), 230, imageCaption)
-                    .write(outputFile,function(){
-                        message.channel.send({file:outputFile}).catch(console.error);
-                    });
-                }   
-            })
-            .catch(function (err) {
-                console.error(err);
-            });
-        }
-
-        if(message.content.substr(0,3) == '!gw'){
-            var possibleGuilds = [];
-            var possibleSeeds = [];
-            var guildName = message.content.substr(4);
-            const numberWithCommas = (x) => {
-                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            } 
-            const getOutput = (guild,i,type) => {
-                return 'http://game.granbluefantasy.jp/#guild/detail/' + guild[i].id + '\n'+'-----------------\n'+'```css\n'+'GUILD - ' + guild[i].name + '\n\n'
-                + 'TYPE - ' + type + '\n\n'+ 'ID - ' + guild[i].id + '\n\n'+'PRELIM RANKING - ' + guild[i].rank + '\n\n'+'PRELIM HONOR - ' 
-                + numberWithCommas(guild[i].honor) + '```';
-            }
-            guildInfo.forEach(function(guild){
-                if(guild.name == guildName){
-                    possibleGuilds.push(guild);
-                }
-            });
-            seedInfo.forEach(function(seed){
-                if(seed.name == guildName){
-                    possibleSeeds.push(seed);
-                }
-            });
-            if(possibleGuilds.length + possibleSeeds.length == 0){
-                message.channel.send('Could not find crew. This may be an unranked crew or you dont know how to spell/capitalize.');
-            } else if (possibleGuilds.length + possibleSeeds.length == 1){
-                if(possibleGuilds.length == 1){
-                    message.channel.send(getOutput(possibleGuilds,0,'normal'));
-                }else{
-                    message.channel.send(getOutput(possibleSeeds,0,'seeded'));
-                }     
-            }else if (possibleGuilds.length + possibleSeeds.length <=3){
-                message.channel.send('Found ' + (possibleGuilds.length + possibleSeeds.length) + ' possible guilds \n\n');
-                for(var i = 0; i < possibleGuilds.length;i++){
-                    message.channel.send(getOutput(possibleGuilds,i,'normal') + '\n\n');
-                }
-                for(var i = 0; i < possibleSeeds.length;i++){
-                    message.channel.send(getOutput(possibleSeeds,i,'seeded') + '\n\n');
-                }
-            }else{
-                message.channel.send('Found ' + (possibleGuilds.length + possibleSeeds.length) + ' possible guilds, posting top 3 \n\n');
-                var numPosted = 0;
-                for(var i = 0; i < possibleSeeds.length;i++){
-                    if(numPosted < 3){
-                        message.channel.send(getOutput(possibleSeeds,i,'seeded') + '\n\n');
-                        numPosted++;
-                    }
-                }
-                for(var i = 0; i < possibleGuilds.length;i++){
-                    if(numPosted < 3){
-                        message.channel.send(getOutput(possibleGuilds,i,'normal') + '\n\n');
-                        numPosted++;
-                    }
-                }   
-            }
-        }
-
-        if(message.content.substr(0,12) == '!player_name'){
-            var name = message.content.substr(13);
-            var possibleNames = [];
-            const numberWithCommas = (x) => {
-                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            } 
-            const getOutput = (name,i) => {
-                return 'http://game.granbluefantasy.jp/#profile/' + name[i].id + '\n'+'-----------------\n'+'```css\n'+'NAME - ' + name[i].name + '\n\n'
-                + 'RANK - ' + name[i].rank + '\n\n'+ 'ID - ' + name[i].id + '\n\n'+'BATTLES - ' + name[i].battles + '\n\n'+'HONOR - ' 
-                + numberWithCommas(name[i].honor) + '```';
-            }
-            indivInfo.forEach(function(ind){
-                if(ind.name == name){
-                    possibleNames.push(ind);
-                }
-            });
-
-            if(possibleNames.length == 0){
-                message.channel.send('Could not find player. This player may not be in the top 80k or you dont know how to spell/capitalize.');
-            } else if (possibleNames.length == 1){
-                    message.channel.send(getOutput(possibleNames,0));
-            }else if (possibleNames.length <=3){
-                message.channel.send('Found ' + possibleNames.length + ' possible players \n\n');
-                for(var i = 0; i < possibleNames.length;i++){
-                    message.channel.send(getOutput(possibleNames,i) + '\n\n');
-                }  
-            }else{
-                message.channel.send('Found ' + possibleNames.length + ' possible players, posting top 3 \n\n');
-                for(var i = 0; i < 3;i++){
-                    message.channel.send(getOutput(possibleNames,i) + '\n\n');
-                }
-            }
-        }
-
-        if(message.content.substr(0,10) == '!player_id'){
-            var id = message.content.substr(11);
-            const numberWithCommas = (x) => {
-                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            } 
-            const getOutput = (name) => {
-                return 'http://game.granbluefantasy.jp/#profile/' + name.id + '\n'+'-----------------\n'+'```css\n'+'NAME - ' + name.name + '\n\n'
-                + 'RANK - ' + name.rank + '\n\n'+ 'ID - ' + name.id + '\n\n'+'BATTLES - ' + name.battles + '\n\n'+'HONOR - ' 
-                + numberWithCommas(name.honor) + '```';
-            }
-            var found = false;
-            indivInfo.forEach(function(ind){
-                if(ind.id == id){
-                    message.channel.send(getOutput(ind));
-                    found = true;
-                }
-            });
-            if(!found) message.channel.send("Could not Find ID. Invalid ID or this player is not in the top 80k");
-        }
 });
