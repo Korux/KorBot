@@ -1,5 +1,5 @@
 {
-  "name": "unicorn_bot",
+  "name": "gbf_bot",
   "description": "Granblue Fantasy Emote Bot",
   "version": "0.0.0",
   "main": "bot.js",
