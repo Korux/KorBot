@@ -24,7 +24,7 @@ function updateRoles(message,fs,bot){
             message.channel.send({embed: {
                 color: 3447003,
                 author: {
-                name: "Unicorn Bot",
+                name: "",
                 icon_url: bot.user.avatarURL
                 },
                 title:"Updated Roles",
@@ -116,7 +116,7 @@ function listRoles(message,rolesInfo,bot){
     message.channel.send({embed: {
         color: 3447003,
         author: {
-        name: "Unicorn",
+        name: "",
         icon_url: bot.user.avatarURL
         },
         title:"Current Roles",

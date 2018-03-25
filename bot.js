@@ -29,6 +29,7 @@ var botSpamControl = [];
 bot.login(botToken.token);
 
 bot.on('ready',(ready) => {
+    bot.user.setActivity("with code");
     console.log(botDetails.name + " is online");
 });
 
@@ -83,15 +84,15 @@ bot.on('message',(message) => {
     
 // - ADMIN -
 
-if(message.content.substr(0,12) == "!botplaying "){
-    adminJS.botPlaying(message,bot);
-}
-if(message.content.substr(0,9) == "!botname "){
-    adminJS.botName(message,bot);
-}
-if(message.content.substr(0,10) == "!botavatar"){
-    adminJS.botAvatar(message,bot,Discord);
-}
+    if(message.content.substr(0,12) == "!botplaying "){
+        adminJS.botPlaying(message,bot);
+    }
+    if(message.content.substr(0,9) == "!botname "){
+        adminJS.botName(message,bot);
+    }
+    if(message.content.substr(0,10) == "!botavatar"){
+        adminJS.botAvatar(message,bot,Discord);
+    }
 
 // - ROLES - 
 
