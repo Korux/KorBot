@@ -22,13 +22,13 @@ const rolesJS = require('./roles.js');
 const emotesJS = require('./emotes.js');
 const guildWarJS = require('./guildwar.js');
 const otherJS = require('./other.js');
+const adminJS = require('./admin.js');
 
 var botSpamControl = [];
 
 bot.login(botToken.token);
 
 bot.on('ready',(ready) => {
-    bot.user.setActivity("Azur Lane");
     console.log(botDetails.name + " is online");
 });
 
@@ -81,6 +81,18 @@ bot.on('message',(message) => {
         message.channel.send(currCommands);
     }
     
+// - ADMIN -
+
+if(message.content.substr(0,12) == "!botplaying "){
+    adminJS.botPlaying(message,bot);
+}
+if(message.content.substr(0,9) == "!botname "){
+    adminJS.botName(message,bot);
+}
+if(message.content.substr(0,10) == "!botavatar"){
+    adminJS.botAvatar(message,bot,Discord);
+}
+
 // - ROLES - 
 
     if(message.content == "!updateroles"){
