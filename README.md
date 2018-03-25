@@ -1,2 +1,1 @@
-# unicorn bot
 Discord Bot.
