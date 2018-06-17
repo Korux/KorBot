@@ -1,9 +1,10 @@
 function updateRoles(message,fs,bot){
     return new Promise(function(resolve,reject){
-        var guildRoles = message.guild.name;
+        var guild = message.guild.name;
         var newRoles = {guildRoles : []};
         newRoles.guildRoles.push({granted : []});
         newRoles.guildRoles.push({denied : []});
+        newRoles.guildRoles.push({server : guild});
         var roles = message.guild.roles;
         var granted = "";
         var denied = "";
@@ -20,27 +21,7 @@ function updateRoles(message,fs,bot){
         });
         json = JSON.stringify(newRoles);
         fs.writeFile('./json/roles.json', json, 'utf8',function(){
-            message.channel.send({embed: {
-                color: 3447003,
-                author: {
-                name: "",
-                icon_url: bot.user.avatarURL
-                },
-                title:"Updated Roles",
-                fields: [{
-                    name: "Granted",
-                    value: granted,
-                    inline:true
-                },
-                {
-                    name: "Denied",
-                    value: denied,
-                    inline : true
-                }
-                ],
-                timestamp: new Date()
-            }
-            }).then(resolve());
+            resolve();
         });  
     });
     
@@ -48,7 +29,6 @@ function updateRoles(message,fs,bot){
 
 function addRemoveRole(message,commandType,rolesInfo){ 
     var roleStr;
-    var guildRoles = message.guild.name;
     if(commandType == '!addrole'){
         roleStr = message.content.substr(9);
     } else {
@@ -105,7 +85,6 @@ function addRemoveRole(message,commandType,rolesInfo){
 
 function listRoles(message,rolesInfo,bot){
     var currRoles ="";
-    var guildRoles = message.guild.name;
     rolesInfo.guildRoles[0].granted.forEach(function(currRole){
         var thisRole = message.guild.roles.find('name',currRole.name);
         if (thisRole != null){

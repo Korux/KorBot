@@ -1,8 +1,13 @@
 {
     "allCommands":[
+        {"name" : "ADMIN:"},
+        {"name" : "----------"},
+        {"name" : "!botname <name>"},
+        {"name" : "!botplaying <game>"},
+        {"name" : "!botavatar <avatar>"},
+        {"name" : "\n"},
         {"name" : "ROLES:"},
         {"name" : "----------"},
-        {"name" : "!updateroles"},
         {"name" : "!addrole <role>"},
         {"name" : "!removerole <role>"},
         {"name" : "!listroles"},

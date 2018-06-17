@@ -96,27 +96,20 @@ bot.on('message',(message) => {
 
 // - ROLES - 
 
-    function updRoles(){
-        rolesJS.updateRoles(message,fs,bot).then(function(){
-            rawDataRoles = fs.readFileSync("./json/roles.json");
-            rolesInfo = JSON.parse(rawDataRoles);
-        });  
-    }
-    if(message.content == "!updateroles"){
-        rolesJS.updateRoles(message,fs,bot).then(function(){
-            rawDataRoles = fs.readFileSync("./json/roles.json");
-            rolesInfo = JSON.parse(rawDataRoles);
-        });  
-    }
-
     if(message.content.substr(0,9) == "!addrole " || message.content.substr(0,12) == "!removerole "){ 
-        updRoles();
-        rolesJS.addRemoveRole(message,message.content.split(" ")[0],rolesInfo);
+        rolesJS.updateRoles(message,fs,bot).then(function(){
+            rawDataRoles = fs.readFileSync("./json/roles.json");
+            rolesInfo = JSON.parse(rawDataRoles);
+            rolesJS.addRemoveRole(message,message.content.split(" ")[0],rolesInfo);
+        }); 
     }
 
     if(message.content == "!listroles"){
-        updRoles();
-        rolesJS.listRoles(message,rolesInfo,bot);
+        rolesJS.updateRoles(message,fs,bot).then(function(){
+            rawDataRoles = fs.readFileSync("./json/roles.json");
+            rolesInfo = JSON.parse(rawDataRoles);
+            rolesJS.listRoles(message,rolesInfo,bot);
+        }); 
     }
 
 // - EMOTES -
