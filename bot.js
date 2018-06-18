@@ -1,7 +1,6 @@
 const jimp = require('jimp');
 const Discord = require('discord.js');
 const fs = require('fs');
-const gm = require('gm').subClass({ imageMagick: true });
 
 const botDetails = require('./package.json');
 const rawData = fs.readFileSync('./json/botinfo.json');
