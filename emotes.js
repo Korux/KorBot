@@ -136,25 +136,72 @@ function actionImage(message,actionType,jimp){
 
 function roundImage(message,actionType,jimp){
     var url = message.mentions.users.first().displayAvatarURL;
+    var avatarFile = './action_images/img_out/avatar.png';
+    var avatarOptions;
+
+    if(actionType == '!bless'){
+        avatarOptions = {
+            width : 85,
+            height : 85,
+            x : 125,
+            y : 60,
+            rotate : 0,
+            originalFile : './action_images/img_in/bless.png',
+            outputFile : './action_images/img_out/bless_out.png'
+        };
+    }else if(actionType == '!hug'){
+        avatarOptions = {
+            width : 76,
+            height : 76,
+            x : 175,
+            y : 125,
+            rotate : 0,
+            originalFile : './action_images/img_in/hug.png',
+            outputFile : './action_images/img_out/hug_out.png'
+        };
+    }else if(actionType == '!kiss'){
+        avatarOptions = {
+            width : 111,
+            height : 111,
+            x : 101,
+            y : 70,
+            rotate : -12,
+            originalFile : './action_images/img_in/kiss.png',
+            outputFile : './action_images/img_out/kiss_out.png'
+        };
+    }
+
     if(url!=null){
         var obj = url.indexOf('.png');
         var trueURL = url.substr(0,obj+4);
         var p1 = jimp.read(trueURL);
-        var p2 = jimp.read("./mask.png");
-        Promise.all([p1, p2]).then(function(images){
+        var p2 = jimp.read("./action_images/img_in/mask.png");
+        var p3 = jimp.read(avatarOptions.originalFile);
+        Promise.all([p1, p2,p3]).then(function(images){
             var avatar = images[0];
             var mask = images[1];
-            avatar.resize(150,150,jimp.RESIZE_BILINEAR);
-            mask.resize(150,150,jimp.RESIZE_BILINEAR);
-            avatar.mask(mask, 0, 0).write("./testimg.png",function(){
-                message.channel.send({file:"./testimg.png"}).catch(console.error());
-            });
-        });
+            var out = images[2];
+            mask
+            .scale(2)
+            .rotate(avatarOptions.rotate)
+            .scale(0.5)
+            .resize(avatarOptions.width,avatarOptions.height,jimp.RESIZE_BILINEAR);
+            avatar
+            .scale(2)
+            .rotate(avatarOptions.rotate)
+            .scale(0.5)
+            .resize(avatarOptions.width,avatarOptions.height,jimp.RESIZE_BILINEAR)
+            .mask(mask,0,0);
+            out.composite(avatar,avatarOptions.x,avatarOptions.y).write(avatarOptions.outputFile,function(){
+                message.channel.send({file:avatarOptions.outputFile}).catch(console.error());
+            });             
+        })
     }
 }
 
 module.exports = {
     actionImage : actionImage,
     emoteImage : emoteImage,
-    slapImage : slapImage
+    slapImage : slapImage,
+    roundImage : roundImage
 };
