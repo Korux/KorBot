@@ -1,6 +1,7 @@
 const jimp = require('jimp');
 const Discord = require('discord.js');
 const fs = require('fs');
+const gm = require('gm').subClass({ imageMagick: true });
 
 const botDetails = require('./package.json');
 const rawData = fs.readFileSync('./json/botinfo.json');
@@ -171,5 +172,24 @@ bot.on('message',(message) => {
     }
     if(message.content.substr(0,8) == "!choose "){
         otherJS.choose(message);
+    }
+
+    if(message.content.substring(0,9) == "!img_test"){
+        var url = message.mentions.users.first().displayAvatarURL;
+        if(url!=null){
+            var obj = url.indexOf('.png');
+            var trueURL = url.substr(0,obj+4);
+            var p1 = jimp.read(trueURL);
+            var p2 = jimp.read("./mask.png");
+            Promise.all([p1, p2]).then(function(images){
+                var avatar = images[0];
+                var mask = images[1];
+                avatar.resize(150,150,jimp.RESIZE_BILINEAR);
+                mask.resize(150,150,jimp.RESIZE_BILINEAR);
+                avatar.mask(mask, 0, 0).write("./testimg.png",function(){
+                    message.channel.send({file:"./testimg.png"}).catch(console.error());
+                });
+            });
+        }
     }
 });
