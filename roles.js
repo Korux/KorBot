@@ -1,20 +1,20 @@
 function updateRoles(message,fs,bot){
     return new Promise(function(resolve,reject){
         var guild = message.guild.name;
-        var newRoles = {guildRoles : []};
-        newRoles.guildRoles.push({granted : []});
-        newRoles.guildRoles.push({denied : []});
-        newRoles.guildRoles.push({server : guild});
+        var newRoles = {};
+        newRoles[guild] = [];
+        newRoles[guild].push({granted : []});
+        newRoles[guild].push({denied : []});
         var roles = message.guild.roles;
         var granted = "";
         var denied = "";
         roles.forEach(function(role){
             if(role.name != '@everyone'){
                 if(role.editable == true){
-                    newRoles.guildRoles[0].granted.push({name : role.name});
+                    newRoles[guild][0].granted.push({name : role.name});
                     granted = granted  + role.name + '\n';
                 }else{
-                    newRoles.guildRoles[1].denied.push({name : role.name});
+                    newRoles[guild][1].denied.push({name : role.name});
                     denied = denied + role.name + '\n';
                 }
             }     
@@ -29,6 +29,7 @@ function updateRoles(message,fs,bot){
 
 function addRemoveRole(message,commandType,rolesInfo){ 
     var roleStr;
+    var guild = message.guild.name;
     if(commandType == '!addrole'){
         roleStr = message.content.substr(9);
     } else {
@@ -37,12 +38,12 @@ function addRemoveRole(message,commandType,rolesInfo){
     roleStr = roleStr.trim();
 
     var role = "";
-    rolesInfo.guildRoles[0].granted.forEach(function(currRole){
+    rolesInfo[guild][0].granted.forEach(function(currRole){
         if(roleStr.toLowerCase() == currRole.name.toLowerCase()){
             role = message.guild.roles.find("name", currRole.name);
         }
     });
-    rolesInfo.guildRoles[1].denied.forEach(function(currRole){
+    rolesInfo[guild][1].denied.forEach(function(currRole){
         if(roleStr.toLowerCase() == currRole.name.toLowerCase()){
             role = message.guild.roles.find("name", currRole.name);
         }
@@ -85,7 +86,8 @@ function addRemoveRole(message,commandType,rolesInfo){
 
 function listRoles(message,rolesInfo,bot){
     var currRoles ="";
-    rolesInfo.guildRoles[0].granted.forEach(function(currRole){
+    var guild = message.guild.name;
+    rolesInfo[guild][0].granted.forEach(function(currRole){
         var thisRole = message.guild.roles.find('name',currRole.name);
         if (thisRole != null){
             if(thisRole.editable){

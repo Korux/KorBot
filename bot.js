@@ -96,6 +96,12 @@ bot.on('message',(message) => {
 
 // - ROLES - 
 
+    if(message.content == "!updateroles"){
+        rolesJS.updateRoles(message,fs,bot).then(function(){
+            rawDataRoles = fs.readFileSync("./json/roles.json");
+            rolesInfo = JSON.parse(rawDataRoles);
+        });        
+    }
     if(message.content.substr(0,9) == "!addrole " || message.content.substr(0,12) == "!removerole "){ 
         rolesJS.updateRoles(message,fs,bot).then(function(){
             rawDataRoles = fs.readFileSync("./json/roles.json");
