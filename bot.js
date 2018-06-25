@@ -23,15 +23,33 @@ const emotesJS = require('./emotes.js');
 const guildWarJS = require('./guildwar.js');
 const otherJS = require('./other.js');
 const adminJS = require('./admin.js');
+const musicJS = require('./music.js');
+
+const songs = fs.readdirSync('./music');
 
 var botSpamControl = [];
 
 bot.login(botToken.token);
 
 bot.on('ready',(ready) => {
-    bot.user.setActivity("with code");
+    bot.user.setActivity("with Korux");
     console.log(botDetails.name + " is online");
+    var guilds = bot.guilds.array();
+    guilds.forEach(guild=>{
+        if(guild.name == "Nayu's basement"){
+            var channels = guild.channels.array();
+            channels.forEach(ch=>{
+                if(ch.name == "Music"){
+                    ch.join();
+                    console.log(botDetails.name + " has joined music channel");
+                    songs.forEach((song)=>{console.log(song)});
+                    musicJS.playMusic(bot,songs);
+                }
+            });
+        }
+    });
 });
+
 
 bot.on('error',(err) => {
     console.log(err);
