@@ -38,7 +38,8 @@
         {"name" : "!roll10 legfes"},
         {"name" : "!spark"},
         {"name" : "!triggers <boss>"},
-        {"name" : "!listtriggers"}
+        {"name" : "!listtriggers"},
+        {"name" : "!say <phrase>"}
     ],
     "SSRSummons":[
         {"name" : "Adramelech"},

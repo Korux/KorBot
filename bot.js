@@ -23,9 +23,12 @@ const emotesJS = require('./emotes.js');
 const guildWarJS = require('./guildwar.js');
 const otherJS = require('./other.js');
 const adminJS = require('./admin.js');
-const musicJS = require('./music.js');
 
 const songs = fs.readdirSync('./music');
+var dispatcher = null;
+var randList = [];
+var voiceChl;
+var songScript;
 
 var botSpamControl = [];
 
@@ -40,20 +43,66 @@ bot.on('ready',(ready) => {
             var channels = guild.channels.array();
             channels.forEach(ch=>{
                 if(ch.name == "Music"){
-                    ch.join();
+                    voiceChl = ch;
+                    voiceChl.join();
                     console.log(botDetails.name + " has joined music channel");
-                    songs.forEach((song)=>{console.log(song)});
-                    musicJS.playMusic(bot,songs);
+                    playMusic();
                 }
             });
         }
     });
 });
 
-
 bot.on('error',(err) => {
     console.log(err);
 });
+
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+function fill(size){
+    a = [];
+    for(var i = 0; i < size;i++){
+        a.push(i);
+    }
+    return a;
+}
+function playSong(bot,index,songs){
+    return new Promise(function(resolve,reject){
+        var songstr = "./music/" + songs[index];
+        console.log(songstr);
+        dispatcher = bot.voiceConnections.array()[0].playFile(songstr);
+        dispatcher.on('end',(end)=>{
+            dispatcher = null;
+            resolve(index+1);
+        });
+    });
+}
+function playMusic(){
+    var currIndex = 1;
+    var randList = fill(songs.length);
+    randList = shuffle(randList);
+    var next = true;
+    songScript = setInterval(()=>{
+        if(next){
+            next = false;
+            playSong(bot,randList[currIndex],songs).then(function(num){
+                if(num == songs.length){
+                    currIndex = 0;
+                    randList = shuffle(randList);
+                }else{
+                    currIndex = num;
+                }
+                next = true;
+            });
+        }
+    },1000);
+}
+
 
 bot.on('message',(message) => {
 
@@ -100,6 +149,16 @@ bot.on('message',(message) => {
         message.channel.send(currCommands);
     }
     
+    if(message.content == "!force_quit"){
+        if(message.author.id == 209516819466289153){
+            clearInterval(songScript);
+            voiceChl.leave();
+            bot.destroy().then(console.log("bot terminated"));
+        }else{
+            message.channel.send("you do not have permission to terminate the bot");
+        }
+    }
+
 // - ADMIN -
 
     if(message.content.substr(0,12) == "!botplaying "){
@@ -198,6 +257,9 @@ bot.on('message',(message) => {
     }
     if(message.content.substr(0,8) == "!choose "){
         otherJS.choose(message);
+    }
+    if(message.content.substr(0,5) == "!say "){
+        otherJS.say(message);
     }
 
 });

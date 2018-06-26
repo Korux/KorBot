@@ -193,11 +193,17 @@ function listTriggers(message,botInfo){
     message.channel.send(currTriggers);
 }
 
+function say(message){
+    var msg = message.content.substr(5);
+    message.delete().then(()=>{message.channel.send(msg)});
+}
+
 module.exports = {
     spark : spark,
     roll10 : roll10,
     choose : choose,
     triggers : triggers,
-    listTriggers : listTriggers
+    listTriggers : listTriggers,
+    say : say
 
 };
