@@ -47,8 +47,13 @@ function emoteImage(message){
 }
 
 function actionImage(message,actionType,jimp){
-
-    var url = message.mentions.users.first().displayAvatarURL;
+    var url;
+    if(message.mentions.users.array().length == 0){
+        console.log("no mention");
+        return;
+    } else {
+        url = message.mentions.users.first().displayAvatarURL;
+    }
     var avatarFile = './action_images/img_out/avatar.png';
     var avatarOptions;
 
@@ -135,7 +140,13 @@ function actionImage(message,actionType,jimp){
 }
 
 function roundImage(message,actionType,jimp){
-    var url = message.mentions.users.first().displayAvatarURL;
+    var url;
+    if(message.mentions.users.array().length == 0){
+        console.log("no mention");
+        return;
+    } else {
+        url = message.mentions.users.first().displayAvatarURL;
+    }
     var avatarFile = './action_images/img_out/avatar.png';
     var avatarOptions;
 
@@ -195,7 +206,9 @@ function roundImage(message,actionType,jimp){
             out.composite(avatar,avatarOptions.x,avatarOptions.y).write(avatarOptions.outputFile,function(){
                 message.channel.send({file:avatarOptions.outputFile}).catch(console.error());
             });             
-        })
+        }).catch(function(err){
+            console.error(err);
+        });
     }
 }
 
