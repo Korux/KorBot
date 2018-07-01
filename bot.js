@@ -24,7 +24,7 @@ const guildWarJS = require('./guildwar.js');
 const otherJS = require('./other.js');
 const adminJS = require('./admin.js');
 
-const songs = fs.readdirSync('./music');
+var songs = fs.readdirSync('./music');
 var dispatcher = null;
 var randList = [];
 var voiceChl;
@@ -71,32 +71,41 @@ function fill(size){
     }
     return a;
 }
-function playSong(bot,index,songs){
+function playSong(bot,index,songs,pos){
     return new Promise(function(resolve,reject){
         var songstr = "./music/" + songs[index];
         console.log(songstr);
         dispatcher = bot.voiceConnections.array()[0].playFile(songstr);
+        dispatcher.on('start',()=>{
+            bot.voiceConnections.array()[0].player.streamingData.pausedTime = 0;
+        });
         dispatcher.on('end',(end)=>{
+            console.log(bot.voiceConnections.array()[0].player.streamingData.pausedTime);
             dispatcher = null;
-            resolve(index+1);
+            resolve(pos+1);
         });
     });
 }
 function playMusic(){
-    var currIndex = 1;
+    var currIndex = 0;
     var randList = fill(songs.length);
     randList = shuffle(randList);
     var next = true;
     songScript = setInterval(()=>{
         if(next){
             next = false;
-            playSong(bot,randList[currIndex],songs).then(function(num){
+            playSong(bot,randList[currIndex],songs,currIndex).then(function(num){
                 if(num == songs.length){
                     currIndex = 0;
                     randList = shuffle(randList);
                 }else{
                     currIndex = num;
                 }
+                console.log(currIndex);
+                console.log(randList[currIndex]);
+                var string = "";
+                randList.forEach((ele)=>{string += ele;string+=","});
+                console.log(string);
                 next = true;
             });
         }
@@ -147,16 +156,6 @@ bot.on('message',(message) => {
         });
         currCommands += '```';
         message.channel.send(currCommands);
-    }
-    
-    if(message.content == "!force_quit"){
-        if(message.author.id == 209516819466289153){
-            clearInterval(songScript);
-            voiceChl.leave();
-            bot.destroy().then(console.log("bot terminated"));
-        }else{
-            message.channel.send("you do not have permission to terminate the bot");
-        }
     }
 
 // - ADMIN -
@@ -260,6 +259,16 @@ bot.on('message',(message) => {
     }
     if(message.content.substr(0,5) == "!say "){
         otherJS.say(message);
+    }
+
+    if(message.content == "!force_quit"){
+        if(message.author.id == 209516819466289153){
+            clearInterval(songScript);
+            voiceChl.leave();
+            bot.destroy().then(console.log("bot terminated"));
+        }else{
+            message.channel.send("you do not have permission to terminate the bot");
+        }
     }
 
 });
