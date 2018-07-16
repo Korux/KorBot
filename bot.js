@@ -1,6 +1,7 @@
 const jimp = require('jimp');
 const Discord = require('discord.js');
 const fs = require('fs');
+const ytdl = require('ytdl-core');
 
 const botDetails = require('./package.json');
 const rawData = fs.readFileSync('./json/botinfo.json');
@@ -23,14 +24,18 @@ const emotesJS = require('./emotes.js');
 const guildWarJS = require('./guildwar.js');
 const otherJS = require('./other.js');
 const adminJS = require('./admin.js');
-
-var songs = fs.readdirSync('./music');
-var dispatcher = null;
-var randList = [];
-var voiceChl;
-var songScript;
+const musicJS = require('./music.js');
 
 var botSpamControl = [];
+
+var dispatcher = null;
+var resetting = false;
+var voiceChl;
+var randList = [];
+var queue = [[],[]];
+var songScript;
+var songs = fs.readdirSync('./music');
+var np = "";
 
 bot.login(botToken.token);
 
@@ -53,9 +58,7 @@ bot.on('ready',(ready) => {
     });
 });
 
-bot.on('error',(err) => {
-    console.log(err);
-});
+// - MUSIC -
 
 function shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) {
@@ -64,6 +67,7 @@ function shuffle(a) {
     }
     return a;
 }
+
 function fill(size){
     a = [];
     for(var i = 0; i < size;i++){
@@ -71,21 +75,34 @@ function fill(size){
     }
     return a;
 }
-function playSong(bot,index,songs,pos){
+
+function playSong(index,songs,pos,queued){
     return new Promise(function(resolve,reject){
         var songstr = "./music/" + songs[index];
-        console.log(songstr);
+        np = songs[index].slice(0,-4);
+        var timer;
+        console.log("song: " + songstr);
         dispatcher = bot.voiceConnections.array()[0].playFile(songstr);
         dispatcher.on('start',()=>{
+            timer = Date.now();
             bot.voiceConnections.array()[0].player.streamingData.pausedTime = 0;
         });
         dispatcher.on('end',(end)=>{
-            console.log(bot.voiceConnections.array()[0].player.streamingData.pausedTime);
+            if(queued){
+                queue[1].shift();
+            }
+            var timeElapsed = Date.now() - timer;
+            var secsElapsed = Math.floor(timeElapsed/1000);
             dispatcher = null;
-            resolve(pos+1);
+            if(secsElapsed < 10){
+                resolve(-1);
+            }else{
+                resolve(pos+1);
+            }
         });
     });
 }
+
 function playMusic(){
     var currIndex = 0;
     var randList = fill(songs.length);
@@ -94,24 +111,59 @@ function playMusic(){
     songScript = setInterval(()=>{
         if(next){
             next = false;
-            playSong(bot,randList[currIndex],songs,currIndex).then(function(num){
+            var pos = randList[currIndex];
+            var songList = songs;
+            var isQueued = false;
+            if(queue[1].length > 0){
+                pos = 0;
+                songList = queue[1];
+                currIndex = currIndex - 1;
+                isQueued = true;
+            }
+            playSong(pos,songList,currIndex,isQueued).then(function(num){
+                if(num == -1){
+                    if(!resetting){
+                        resetMusicConn();
+                    }
+                    return;
+                }
                 if(num == songs.length){
                     currIndex = 0;
                     randList = shuffle(randList);
                 }else{
                     currIndex = num;
                 }
-                console.log(currIndex);
-                console.log(randList[currIndex]);
+                console.log("current index: " + currIndex);
+                console.log("song num at index: " + randList[currIndex]);
                 var string = "";
                 randList.forEach((ele)=>{string += ele;string+=","});
-                console.log(string);
+                console.log("full song list: " + string);
                 next = true;
             });
         }
     },1000);
 }
 
+function resetMusicConn(){
+    resetting = true;
+    clearInterval(songScript);
+    voiceChl.leave();
+    setTimeout(()=>{voiceChl.join();},500);
+    setTimeout(()=>{playMusic();resetting = false;},1000);
+}
+
+function quitMusicConn(){
+    resetting = true;
+    clearInterval(songScript);
+    voiceChl.leave();
+    setTimeout(()=>{bot.destroy().then(console.log("bot terminated"));},1100);
+}
+
+//----------------------------
+
+bot.on('error',(err) => {
+    console.log(err);
+});
 
 bot.on('message',(message) => {
 
@@ -261,14 +313,33 @@ bot.on('message',(message) => {
         otherJS.say(message);
     }
 
-    if(message.content == "!force_quit"){
+    if(message.content == "!forcequit"){
         if(message.author.id == 209516819466289153){
-            clearInterval(songScript);
-            voiceChl.leave();
-            bot.destroy().then(console.log("bot terminated"));
+            quitMusicConn();
         }else{
             message.channel.send("you do not have permission to terminate the bot");
         }
     }
 
+// - MUSIC -    
+
+    if(message.content.substr(0,10) == "!savesong "){
+        musicJS.saveSong(message,fs,ytdl);
+    }
+    if(message.content.substr(0,6) == "!song "){
+        queue = musicJS.queueSong(message,queue,songs);
+    }
+    if(message.content == "!queue"){
+        musicJS.displayQueue(message,bot,queue);
+    }
+    if(message.content == "!np"){
+		message.channel.send(np);
+	}
+    if(message.content == "!reloadsongs"){
+        var numsongs = songs.length;
+        songs = fs.readdirSync('./music');
+        var numsongsloaded = songs.length;
+        var newsongs = numsongsloaded-numsongs;
+        message.channel.send("songs reloaded, found " + newsongs + " new songs");
+    }
 });

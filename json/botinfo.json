@@ -39,7 +39,14 @@
         {"name" : "!spark"},
         {"name" : "!triggers <boss>"},
         {"name" : "!listtriggers"},
-        {"name" : "!say <phrase>"}
+        {"name" : "!say <phrase>"},
+        {"name" : "\n"},
+        {"name" : "MUSIC:"},
+        {"name" : "----------"},
+        {"name" : "!savesong <YTLink> <file name>"},
+        {"name" : "!song <song>"},
+        {"name" : "!queue"},
+        {"name" : "!reloadsongs"}
     ],
     "SSRSummons":[
         {"name" : "Adramelech"},
