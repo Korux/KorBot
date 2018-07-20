@@ -314,7 +314,7 @@ bot.on('message',(message) => {
     }
 
     if(message.content == "!forcequit"){
-        if(message.author.id == 209516819466289153){
+        if(message.member.roles.find("name", "Admin")){
             quitMusicConn();
         }else{
             message.channel.send("you do not have permission to terminate the bot");
@@ -324,7 +324,11 @@ bot.on('message',(message) => {
 // - MUSIC -    
 
     if(message.content.substr(0,10) == "!savesong "){
-        musicJS.saveSong(message,fs,ytdl);
+        if(message.member.roles.find("name", "Admin")){
+            musicJS.saveSong(message,fs,ytdl);
+        }else{
+            message.channel.send("you do not have permission to add songs");
+        }
     }
     if(message.content.substr(0,6) == "!song "){
         queue = musicJS.queueSong(message,queue,songs);

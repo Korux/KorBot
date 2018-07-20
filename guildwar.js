@@ -1,4 +1,5 @@
 function guildWar(message,guildInfo,seedInfo){
+    message.channel.send("This data is from: FEB 2018 - DARK ADV GW")
     var possibleGuilds = [];
     var possibleSeeds = [];
     var guildName = message.content.substr(4);
@@ -55,6 +56,7 @@ function guildWar(message,guildInfo,seedInfo){
 }
 
 function playerName(message,indivInfo){
+    message.channel.send("This data is from: JULY 2018 - WIND ADV GW")
     var name = message.content.substr(13);
     var possibleNames = [];
     const numberWithCommas = (x) => {
@@ -89,6 +91,7 @@ function playerName(message,indivInfo){
 }
 
 function playerID(message,indivInfo){
+    message.channel.send("This data is from: JULY 2018 - WIND ADV GW")
     var id = message.content.substr(11);
     const numberWithCommas = (x) => {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -105,7 +108,7 @@ function playerID(message,indivInfo){
             found = true;
         }
     });
-    if(!found) message.channel.send("Could not Find ID. Invalid ID or this player is not in the top 80k");
+    if(!found) message.channel.send("Could not Find ID. Invalid ID or this player is not in the top 120k");
 }
 
 module.exports = {
