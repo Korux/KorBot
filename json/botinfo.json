@@ -46,7 +46,9 @@
         {"name" : "!savesong <YTLink> <file name>"},
         {"name" : "!song <song>"},
         {"name" : "!queue"},
-        {"name" : "!reloadsongs"}
+        {"name" : "!np"},
+        {"name" : "!artist <artist>"},
+        {"name" : "!reset"}
     ],
     "SSRSummons":[
         {"name" : "Adramelech"},

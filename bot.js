@@ -32,7 +32,7 @@ var dispatcher = null;
 var resetting = false;
 var voiceChl;
 var randList = [];
-var queue = [[],[]];
+var queue = [[],[],[]];
 var songScript;
 var songs = fs.readdirSync('./music');
 var np = "";
@@ -49,9 +49,14 @@ bot.on('ready',(ready) => {
             channels.forEach(ch=>{
                 if(ch.name == "Music"){
                     voiceChl = ch;
-                    voiceChl.join();
-                    console.log(botDetails.name + " has joined music channel");
-                    playMusic();
+                    voiceChl.join().then((connection)=>{
+                        connection.on('error',(err) => {
+                            console.log("Voice Connection Error");
+                        });
+                        connection.on('ready',(re)=>{resetMusicConn()});
+                        console.log(botDetails.name + " has joined music channel");
+                        playMusic();
+                    });
                 }
             });
         }
@@ -90,6 +95,8 @@ function playSong(index,songs,pos,queued){
         dispatcher.on('end',(end)=>{
             if(queued){
                 queue[1].shift();
+                queue[0].shift();
+                queue[2].shift();
             }
             var timeElapsed = Date.now() - timer;
             var secsElapsed = Math.floor(timeElapsed/1000);
@@ -116,7 +123,7 @@ function playMusic(){
             var isQueued = false;
             if(queue[1].length > 0){
                 pos = 0;
-                songList = queue[1];
+                songList = queue[2];
                 currIndex = currIndex - 1;
                 isQueued = true;
             }
@@ -127,8 +134,9 @@ function playMusic(){
                     }
                     return;
                 }
-                if(num == songs.length){
+                if(num == randList.length){
                     currIndex = 0;
+                    randList = fill(songs.length);
                     randList = shuffle(randList);
                 }else{
                     currIndex = num;
@@ -148,8 +156,16 @@ function resetMusicConn(){
     resetting = true;
     clearInterval(songScript);
     voiceChl.leave();
-    setTimeout(()=>{voiceChl.join();},500);
-    setTimeout(()=>{playMusic();resetting = false;},1000);
+    setTimeout(()=>{
+        voiceChl.join().then((connection)=>{
+        connection.on('error',(err) => {
+            console.log("Voice Connection Error");
+        });
+        connection.on('ready',(re)=>{resetMusicConn()});
+        console.log(botDetails.name + " has joined music channel");
+        playMusic();
+    });},500);
+    setTimeout(()=>{resetting = false;},1000);
 }
 
 function quitMusicConn(){
@@ -282,13 +298,13 @@ bot.on('message',(message) => {
 // - GUILD WAR - 
 
     if(message.content.substr(0,3) == '!gw'){
-        guildWarJS.guildWar(message,guildInfo,seedInfo);
+        //guildWarJS.guildWar(message,guildInfo,seedInfo);
     }
     if(message.content.substr(0,12) == '!player_name'){
-        guildWarJS.playerName(message,indivInfo);
+        //guildWarJS.playerName(message,indivInfo);
     }
     if(message.content.substr(0,10) == '!player_id'){
-        guildWarJS.playerID(message,indivInfo);
+        //guildWarJS.playerID(message,indivInfo);
     }
 
 // - OTHER -
@@ -325,7 +341,7 @@ bot.on('message',(message) => {
 
     if(message.content.substr(0,10) == "!savesong "){
         if(message.member.roles.find("name", "Admin")){
-            musicJS.saveSong(message,fs,ytdl);
+            musicJS.saveSong(message,fs,ytdl).then(()=>{songs = fs.readdirSync('./music');});
         }else{
             message.channel.send("you do not have permission to add songs");
         }
@@ -338,12 +354,11 @@ bot.on('message',(message) => {
     }
     if(message.content == "!np"){
 		message.channel.send(np);
-	}
-    if(message.content == "!reloadsongs"){
-        var numsongs = songs.length;
-        songs = fs.readdirSync('./music');
-        var numsongsloaded = songs.length;
-        var newsongs = numsongsloaded-numsongs;
-        message.channel.send("songs reloaded, found " + newsongs + " new songs");
+    }
+    if(message.content.substr(0,8) == "!artist "){
+        musicJS.findArtist(message,songs);
+    }
+    if(message.content == "!reset"){
+        resetMusicConn();
     }
 });

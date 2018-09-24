@@ -1,31 +1,36 @@
 
 function queueSong(message,queue,songs){
     var info = message.content.split(" ");
-    var title = "";
     var song;
-    for(var i = 1; i < info.length;i++){
-        title+=info[i];
-        title+= " ";
-    }
-    title = title.toLowerCase().trim();
     var possibleSongs = [];
     for(var i = 0; i < songs.length; i++){
         song = songs[i];
-        var name = song.split(" - ")[1];
+        var name = song.replace(" - "," ");
         name = name.toLowerCase().trim().slice(0,-4).trim();
-        if(name.includes(title)){
+        var matchCount = 0;
+        for(var j = 1; j < info.length; j++){
+            if(name.includes(info[j])){
+                matchCount++;
+            }
+        }
+        if(matchCount == info.length-1){
             possibleSongs.push(song);
         }
     }
     if(possibleSongs.length > 1){
-        message.channel.send("More than 1 song found");
+        var out = "";
+        out += "More than 1 song found\n";
         possibleSongs.forEach(song=>{
-            message.channel.send(song);
+            out+=song.trim(0,-4);
+            out+="\n";
         });
+        message.channel.send(out);
     }else if(possibleSongs.length < 1){
         message.channel.send("No song found");
     }else{
-        queue[1].push(possibleSongs[0]);
+        queue[1].push(possibleSongs[0].split(" - ")[1]);
+        queue[0].push(possibleSongs[0].split(" - ")[0]);
+        queue[2].push(possibleSongs[0]);
         message.channel.send("```\n" + possibleSongs[0].slice(0,-4) + "\nhas been added to the queue" + "\n```");
     }
     return queue;
@@ -72,19 +77,48 @@ function DLYTLink(ytLink,songstr,fs,ytdl){
 }
 
 function saveSong(message,fs,ytdl){
-    var info = message.content.split(" ");
-    var song = info[1];
-    var title = "";
-    for(var i = 2; i < info.length;i++){
-        title+=info[i];
-        title+= " ";
-    }
-    DLYTLink(song,title,fs,ytdl).then(()=>{message.channel.send("song saved with title: " + title)});
+    return new Promise(function(resolve,reject){
+        var info = message.content.split(" ");
+        var song = info[1];
+        var title = "";
+        for(var i = 2; i < info.length;i++){
+            title+=info[i];
+            title+= " ";
+        }
+        DLYTLink(song,title,fs,ytdl).then(()=>{
+            message.channel.send("song saved with title: " + title);
+            resolve();
+        });
+    });
 }
 
+function findArtist(message,songs){
+    var artist = message.content.slice(8,message.content.length);
+    artist = artist.toLowerCase().trim();
+    var song;
+    var output = "";
+    for(var i = 0; i < songs.length; i++){
+        song = songs[i];
+        var songArtist = song.split(" - ")[0];
+        songArtist = songArtist.toLowerCase().trim();
+        var allArtists = songArtist.split(",");
+        for(var j = 0; j < allArtists.length;j++){
+            if(artist == allArtists[j].trim()){
+                output += songs[i].slice(0,-4);
+                output += "\n";
+            }
+        }
+    }
+    if(output == ""){
+        message.channel.send("No Artist Found");
+    }else{
+        message.channel.send("```\n" + output + "\n```");
+    }
+}
 
 module.exports = {
     saveSong : saveSong,
     queueSong : queueSong,
-    displayQueue : displayQueue
+    displayQueue : displayQueue,
+    findArtist : findArtist
 }
