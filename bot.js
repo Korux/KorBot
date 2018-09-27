@@ -83,6 +83,7 @@ function fill(size){
 
 function playSong(index,songs,pos,queued){
     return new Promise(function(resolve,reject){
+        dispatcher = null;
         var songstr = "./music/" + songs[index];
         np = songs[index].slice(0,-4);
         var timer;
