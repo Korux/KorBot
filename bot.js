@@ -29,9 +29,7 @@ const musicJS = require('./music.js');
 var botSpamControl = [];
 
 var dispatcher = null;
-var resetting = false;
 var voiceChl;
-var randList = [];
 var queue = [[],[],[]];
 var songScript;
 var songs = fs.readdirSync('./music');
@@ -39,31 +37,9 @@ var np = "";
 
 bot.login(botToken.token);
 
-bot.on('ready',(ready) => {
-    bot.user.setActivity("with Korux");
-    console.log(botDetails.name + " is online");
-    var guilds = bot.guilds.array();
-    guilds.forEach(guild=>{
-        if(guild.name == "Nayu's basement"){
-            var channels = guild.channels.array();
-            channels.forEach(ch=>{
-                if(ch.name == "Music"){
-                    voiceChl = ch;
-                    voiceChl.join().then((connection)=>{
-                        connection.on('error',(err) => {
-                            console.log("Voice Connection Error");
-                        });
-                        connection.on('ready',(re)=>{resetMusicConn()});
-                        console.log(botDetails.name + " has joined music channel");
-                        playMusic();
-                    });
-                }
-            });
-        }
-    });
-});
-
 // - MUSIC -
+
+//--------------------------------------------------------------
 
 function shuffle(a) {
     for (let i = a.length - 1; i > 0; i--) {
@@ -82,18 +58,18 @@ function fill(size){
 }
 
 function playSong(index,songs,pos,queued){
-    return new Promise(function(resolve,reject){
+    return new Promise(function(resolve){
         dispatcher = null;
         var songstr = "./music/" + songs[index];
         np = songs[index].slice(0,-4);
         var timer;
-        console.log("song: " + songstr);
+        console.log("song: " + songstr+'\n');
         dispatcher = bot.voiceConnections.array()[0].playFile(songstr);
         dispatcher.on('start',()=>{
             timer = Date.now();
             bot.voiceConnections.array()[0].player.streamingData.pausedTime = 0;
         });
-        dispatcher.on('end',(end)=>{
+        dispatcher.on('end',()=>{
             if(queued){
                 queue[1].shift();
                 queue[0].shift();
@@ -130,10 +106,7 @@ function playMusic(){
             }
             playSong(pos,songList,currIndex,isQueued).then(function(num){
                 if(num == -1){
-                    if(!resetting){
-                        resetMusicConn();
-                    }
-                    return;
+                   resetMusicConn().then(()=>{return;});
                 }
                 if(num == randList.length){
                     currIndex = 0;
@@ -142,11 +115,6 @@ function playMusic(){
                 }else{
                     currIndex = num;
                 }
-                console.log("current index: " + currIndex);
-                console.log("song num at index: " + randList[currIndex]);
-                var string = "";
-                randList.forEach((ele)=>{string += ele;string+=","});
-                console.log("full song list: " + string);
                 next = true;
             });
         }
@@ -154,32 +122,57 @@ function playMusic(){
 }
 
 function resetMusicConn(){
-    resetting = true;
-    clearInterval(songScript);
-    voiceChl.leave();
-    setTimeout(()=>{
-        voiceChl.join().then((connection)=>{
-        connection.on('error',(err) => {
-            console.log("Voice Connection Error");
-        });
-        connection.on('ready',(re)=>{resetMusicConn()});
-        console.log(botDetails.name + " has joined music channel");
-        playMusic();
-    });},500);
-    setTimeout(()=>{resetting = false;},1000);
+    return new Promise(function(resolve){
+        clearInterval(songScript);
+        voiceChl.leave();
+        setTimeout(()=>{
+            voiceChl.join().then((connection)=>{   
+                connection.on('error',() => {
+                    console.log("Voice Connection Error");
+                });
+                connection.on('ready',()=>{resetMusicConn()});
+                console.log(botDetails.name + " has joined music channel");
+                playMusic();
+                resolve();
+            });
+        },500);
+    });
 }
 
 function quitMusicConn(){
-    resetting = true;
     clearInterval(songScript);
     voiceChl.leave();
     setTimeout(()=>{bot.destroy().then(console.log("bot terminated"));},1100);
 }
 
-//----------------------------
+//--------------------------------------------------------------
 
-bot.on('error',(err) => {
-    console.log(err);
+bot.on('error',() => {
+    console.log("bot error");
+});
+
+bot.on('ready',() => {
+    bot.user.setActivity("with Korux");
+    console.log(botDetails.name + " is online");
+    var guilds = bot.guilds.array();
+    guilds.forEach(guild=>{
+        if(guild.name == "Nayu's basement"){
+            var channels = guild.channels.array();
+            channels.forEach(ch=>{
+                if(ch.name == "Music"){
+                    voiceChl = ch;
+                    voiceChl.join().then((connection)=>{
+                        connection.on('error',() => {
+                            console.log("Voice Connection Error");
+                        });
+                        connection.on('ready',()=>{resetMusicConn()});
+                        console.log(botDetails.name + " has joined music channel");
+                        playMusic();
+                    });
+                }
+            });
+        }
+    });
 });
 
 bot.on('message',(message) => {
