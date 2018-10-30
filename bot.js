@@ -127,13 +127,18 @@ function resetMusicConn(){
         voiceChl.leave();
         setTimeout(()=>{
             voiceChl.join().then((connection)=>{   
-                connection.on('error',() => {
-                    console.log("Voice Connection Error");
+                connection.on('error',(err) => {
+                    console.log("Voice Connection Error: " + err.message);
                 });
                 connection.on('ready',()=>{resetMusicConn()});
                 console.log(botDetails.name + " has joined music channel");
                 playMusic();
                 resolve();
+            }).catch((err)=>{
+                console.log('15 sec timeout');
+                console.log('error msg: ' + err.message);
+                console.log('attempting reconnect');
+                resetMusicConn();
             });
         },500);
     });
@@ -147,8 +152,8 @@ function quitMusicConn(){
 
 //--------------------------------------------------------------
 
-bot.on('error',() => {
-    console.log("bot error");
+bot.on('error',(err) => {
+    console.log("bot error: " + err.message);
 });
 
 bot.on('ready',() => {
@@ -162,8 +167,8 @@ bot.on('ready',() => {
                 if(ch.name == "Music"){
                     voiceChl = ch;
                     voiceChl.join().then((connection)=>{
-                        connection.on('error',() => {
-                            console.log("Voice Connection Error");
+                        connection.on('error',(err) => {
+                            console.log("Voice Connection Error: " + err.message);
                         });
                         connection.on('ready',()=>{resetMusicConn()});
                         console.log(botDetails.name + " has joined music channel");
