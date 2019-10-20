@@ -1,1 +1,3 @@
+STATUS: FINISHED
+
 Discord Bot.
