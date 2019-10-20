@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "discord.js": "11.3.0",
+    "forever": "^1.0.0",
     "jimp": "0.2.28",
     "node-opus": "^0.3.0",
+    "request": "^2.88.0",
     "ytdl-core": "^0.20.4"
   }
 }

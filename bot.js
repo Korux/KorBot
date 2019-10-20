@@ -1,7 +1,7 @@
 const jimp = require('jimp');
 const Discord = require('discord.js');
 const fs = require('fs');
-const ytdl = require('ytdl-core');
+const request = require('request');
 
 const botDetails = require('./package.json');
 const rawData = fs.readFileSync('./json/botinfo.json');
@@ -24,133 +24,10 @@ const emotesJS = require('./emotes.js');
 const guildWarJS = require('./guildwar.js');
 const otherJS = require('./other.js');
 const adminJS = require('./admin.js');
-const musicJS = require('./music.js');
 
 var botSpamControl = [];
 
-var dispatcher = null;
-var voiceChl;
-var queue = [[],[],[]];
-var songScript;
-var songs = fs.readdirSync('./music');
-var np = "";
-
 bot.login(botToken.token);
-
-// - MUSIC -
-
-//--------------------------------------------------------------
-
-function shuffle(a) {
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-}
-
-function fill(size){
-    a = [];
-    for(var i = 0; i < size;i++){
-        a.push(i);
-    }
-    return a;
-}
-
-function playSong(index,songs,pos,queued){
-    return new Promise(function(resolve){
-        dispatcher = null;
-        var songstr = "./music/" + songs[index];
-        np = songs[index].slice(0,-4);
-        var timer;
-        console.log("song: " + songstr+'\n');
-        dispatcher = bot.voiceConnections.array()[0].playFile(songstr);
-        dispatcher.on('start',()=>{
-            timer = Date.now();
-            bot.voiceConnections.array()[0].player.streamingData.pausedTime = 0;
-        });
-        dispatcher.on('end',()=>{
-            if(queued){
-                queue[1].shift();
-                queue[0].shift();
-                queue[2].shift();
-            }
-            var timeElapsed = Date.now() - timer;
-            var secsElapsed = Math.floor(timeElapsed/1000);
-            dispatcher = null;
-            if(secsElapsed < 10){
-                resolve(-1);
-            }else{
-                resolve(pos+1);
-            }
-        });
-    });
-}
-
-function playMusic(){
-    var currIndex = 0;
-    var randList = fill(songs.length);
-    randList = shuffle(randList);
-    var next = true;
-    songScript = setInterval(()=>{
-        if(next){
-            next = false;
-            var pos = randList[currIndex];
-            var songList = songs;
-            var isQueued = false;
-            if(queue[1].length > 0){
-                pos = 0;
-                songList = queue[2];
-                currIndex = currIndex - 1;
-                isQueued = true;
-            }
-            playSong(pos,songList,currIndex,isQueued).then(function(num){
-                if(num == -1){
-                   resetMusicConn().then(()=>{return;});
-                }
-                if(num == randList.length){
-                    currIndex = 0;
-                    randList = fill(songs.length);
-                    randList = shuffle(randList);
-                }else{
-                    currIndex = num;
-                }
-                next = true;
-            });
-        }
-    },1000);
-}
-
-function resetMusicConn(){
-    return new Promise(function(resolve){
-        clearInterval(songScript);
-        voiceChl.leave();
-        setTimeout(()=>{
-            voiceChl.join().then((connection)=>{   
-                connection.on('error',(err) => {
-                    console.log("Voice Connection Error: " + err.message);
-                });
-                connection.on('ready',()=>{resetMusicConn()});
-                console.log(botDetails.name + " has joined music channel");
-                playMusic();
-                resolve();
-            }).catch((err)=>{
-                console.log('15 sec timeout');
-                console.log('error msg: ' + err.message);
-                console.log('attempting reconnect');
-                resetMusicConn();
-            });
-        },500);
-    });
-}
-
-function quitMusicConn(){
-    clearInterval(songScript);
-    voiceChl.leave();
-    setTimeout(()=>{bot.destroy().then(console.log("bot terminated"));},1100);
-}
-
-//--------------------------------------------------------------
 
 bot.on('error',(err) => {
     console.log("bot error: " + err.message);
@@ -159,25 +36,6 @@ bot.on('error',(err) => {
 bot.on('ready',() => {
     bot.user.setActivity("with Korux");
     console.log(botDetails.name + " is online");
-    var guilds = bot.guilds.array();
-    guilds.forEach(guild=>{
-        if(guild.name == "Nayu's basement"){
-            var channels = guild.channels.array();
-            channels.forEach(ch=>{
-                if(ch.name == "Music"){
-                    voiceChl = ch;
-                    voiceChl.join().then((connection)=>{
-                        connection.on('error',(err) => {
-                            console.log("Voice Connection Error: " + err.message);
-                        });
-                        connection.on('ready',()=>{resetMusicConn()});
-                        console.log(botDetails.name + " has joined music channel");
-                        playMusic();
-                    });
-                }
-            });
-        }
-    });
 });
 
 bot.on('message',(message) => {
@@ -236,10 +94,16 @@ bot.on('message',(message) => {
     if(message.content.substr(0,10) == "!botavatar"){
         adminJS.botAvatar(message,bot,Discord);
     }
+    if(message.content == "!forcequit4320"){ 
+        bot.destroy().then(function(){
+            console.log("Spam Detected, Terminating Bot");
+        })
+        .catch(console.error);
+    }
 
 // - ROLES - 
 
-    if(message.content == "!updateroles"){
+ /*   if(message.content == "!updateroles"){
         rolesJS.updateRoles(message,fs,bot).then(function(){
             rawDataRoles = fs.readFileSync("./json/roles.json");
             rolesInfo = JSON.parse(rawDataRoles);
@@ -259,12 +123,15 @@ bot.on('message',(message) => {
             rolesInfo = JSON.parse(rawDataRoles);
             rolesJS.listRoles(message,rolesInfo,bot);
         }); 
-    }
+    }*/
 
 // - EMOTES -
 
     if(message.content.substr(0,5) == "!emo "){
         emotesJS.emoteImage(message);
+    }
+    if(message.content.substr(0,8) == "!addemo "){
+        emotesJS.addEmote(message,request,fs);
     }
     if(message.content.substr(0,9) == '!buttblow'){
         emotesJS.actionImage(message,"!buttblow",jimp);
@@ -308,13 +175,6 @@ bot.on('message',(message) => {
 
 // - OTHER -
 
-    if(message.content.substr(0,10) == "!triggers "){
-        otherJS.triggers(message,botInfo);
-    }
-
-    if(message.content == "!listtriggers"){
-        otherJS.listTriggers(message,botInfo);
-    }
     if(message.content == "!spark"){
         otherJS.spark(message,botInfo);
     }
@@ -326,38 +186,5 @@ bot.on('message',(message) => {
     }
     if(message.content.substr(0,5) == "!say "){
         otherJS.say(message);
-    }
-
-    if(message.content == "!forcequit"){
-        if(message.member.roles.find("name", "Admin")){
-            quitMusicConn();
-        }else{
-            message.channel.send("you do not have permission to terminate the bot");
-        }
-    }
-
-// - MUSIC -    
-
-    if(message.content.substr(0,10) == "!savesong "){
-        if(message.member.roles.find("name", "Admin")){
-            musicJS.saveSong(message,fs,ytdl).then(()=>{songs = fs.readdirSync('./music');});
-        }else{
-            message.channel.send("you do not have permission to add songs");
-        }
-    }
-    if(message.content.substr(0,6) == "!song "){
-        queue = musicJS.queueSong(message,queue,songs);
-    }
-    if(message.content == "!queue"){
-        musicJS.displayQueue(message,bot,queue);
-    }
-    if(message.content == "!np"){
-		message.channel.send(np);
-    }
-    if(message.content.substr(0,8) == "!artist "){
-        musicJS.findArtist(message,songs);
-    }
-    if(message.content == "!reset"){
-        resetMusicConn();
     }
 });

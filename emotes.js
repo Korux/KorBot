@@ -40,9 +40,35 @@ function slapImage(message,jimp){
 function emoteImage(message){
     var emoteStr = message.content.split(" ")[1];
     var addStr = "./images/additional_images/" + emoteStr + ".png";
+    var addStr2 = "./images/additional_images/" + emoteStr + ".jpeg";
+    var addStr3 = "./images/additional_images/" + emoteStr + ".gif";
     emoteStr = "./images/" + emoteStr + ".png";
     message.channel.send({file:emoteStr}).catch(function(){
-        message.channel.send({file:addStr}).catch(console.error);
+        message.channel.send({file:addStr}).catch(function(){
+            message.channel.send({file:addStr2}).catch(function(){
+                message.channel.send({file:addStr3}).catch(console.error);
+            });
+        });
+    });
+}
+
+function addEmote(message,request,fs){
+    var emoteName = message.content.split(" ")[1];
+    var fileName = message.content.split(" ")[2];
+    request.head(fileName,function(err,res,body){
+        if(err){
+            message.channel.send("could not save emote");
+            console.error;
+        }
+        var type = res.headers['content-type'];
+        if(type.split("/")[0] != 'image'){
+            message.channel.send("not an image extension (jpeg,png,gif)");
+        }else{
+            var extension = '.'+type.split("/")[1];
+            request(fileName).pipe(fs.createWriteStream(emoteName + extension).on('close',function(){
+                message.channel.send("emote saved");
+            }));
+        }
     });
 }
 
@@ -216,5 +242,6 @@ module.exports = {
     actionImage : actionImage,
     emoteImage : emoteImage,
     slapImage : slapImage,
-    roundImage : roundImage
+    roundImage : roundImage,
+    addEmote : addEmote
 };

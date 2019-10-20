@@ -3,7 +3,7 @@ function botName(message,bot){
         var name = message.content.substr(9);
         bot.user.setUsername(name).catch(console.error);
     }else{
-        message.channel.send("You're not Korux :thinking:");
+        message.channel.send("Stop.");
     } 
 }
 
@@ -17,7 +17,7 @@ function botAvatar(message,bot,Discord){
             bot.user.setAvatar(avatar).catch(console.error);
         });
     }else{
-        message.channel.send("You're not Korux :thinking:");
+        message.channel.send("No.");
     } 
 }
 
@@ -26,7 +26,7 @@ function botPlaying(message,bot){
         var playing = message.content.substr(12);
         bot.user.setActivity(playing).catch(console.error);
     }else{
-        message.channel.send("You're not Korux :thinking:");
+        message.channel.send("Go Away.");
     } 
 }
 
